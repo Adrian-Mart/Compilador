@@ -7,12 +7,30 @@ using System.Xml.Linq;
 
 namespace Graph
 {
+    /// <summary>
+    /// Represents a deterministic finite automaton (DFA).
+    /// </summary>
     public class DFA
     {
+        /// <summary>
+        /// A dictionary that maps state IDs to DFAState objects
+        /// </summary>
         private Dictionary<int, DFAState> states;
+        /// <summary>
+        /// The start state of the DFA
+        /// </summary>
         private DFAState startState;
+        /// <summary>
+        /// The alphabet of the DFA
+        /// </summary>
         private char[] alphabet;
 
+        /// <summary>
+        /// Initializes a new instance of the DFA class.
+        /// </summary>
+        /// <param name="alphabet">The alphabet of the DFA.</param>
+        /// <param name="nodes">A dictionary that maps node IDs to Node objects.</param>
+        /// <param name="startNodeId">The ID of the start node.</param>
         internal DFA(char[] alphabet, Dictionary<int, Node> nodes, int startNodeId)
         {
             this.alphabet = alphabet;
@@ -33,6 +51,11 @@ namespace Graph
             }
         }
 
+        /// <summary>
+        /// Test whether the string s is accepted by the DFA.
+        /// </summary>
+        /// <param name="s"> String to be tested</param>
+        /// <returns> True if the string is accepted by the DFA, false otherwise. </returns>
         public bool TestString(string s)
         {
             int errorIndex = 0;
