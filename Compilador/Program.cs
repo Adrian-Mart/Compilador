@@ -1,12 +1,13 @@
 ﻿using Graph;
+using RegexInterpreter;
 
-namespace RegexInterpreter
+namespace Compilador // Note: actual namespace depends on the project name.
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            string e = "(h|H).(o|O).(l|L).(a|A). .(a|b|c|d|e|f|g|h|i|j|k|l|m|n|ñ|o|p|q|r|s|t|u|v|w|x|y|z)+.!";
+            string e = "(h|H).(o|O).(l|L).(a|A). .(a|b|c|d|e|f|g|h|i|j|k|l|m|n|ñ|o|p|q|r|s|t|u|v|w|x|y|z| )+.!";
             Console.Write("Expression: " + e + " \t Parsed: ");
             Console.Write(Parser.Parse(e));
             Console.Write(" \t Interpreted: ");

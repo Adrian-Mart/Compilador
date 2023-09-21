@@ -26,7 +26,7 @@ namespace Graph
             DefineAutomata();
             ClearDeadEndStates();
             ClearInaccessibleStates();
-            Console.WriteLine(this.ToString());
+            //Console.WriteLine(this.ToString());
             automata = new DFA(this.alphabet, this.ids, this.startId);
         }
 
