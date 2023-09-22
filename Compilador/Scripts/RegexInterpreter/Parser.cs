@@ -17,48 +17,68 @@ namespace Compilador.RegexInterpreter
         /// Stack used for storing the oparators during parsing.
         /// </summary>
         private static Stack<char> operatorStack = new Stack<char>();
+
         /// <summary>
         /// Queue used for storing the output during parsing.
         /// </summary>
         private static Queue<char> outputQueue = new Queue<char>();
 
         /// <summary>
-        /// Extra symbols that are allowed in any the expresion.
-        /// The default symbols are digits and letters.
-        /// </summary>
-        private static char[] extraAlphabet = new char[] { ' ', '!' };
-
-        /// <summary>
         /// Contains all the valid operators including ( and ).
         /// </summary>
-        private static char[] operators = new char[] { '|', '+', '*', '.', '(', ')' };
+        private static readonly Dictionary<char, char> operators = new Dictionary<char, char>(){
+            {'|', '╔'},
+            {'.', '╖'},
+            {'*', '╗'},
+            {'+', '╘'},
+            {'(', '╙'},
+            {')', '╚'}
+        };
 
-        public static char[] ExtraAlphabet { get => extraAlphabet; }
+        /// <summary>
+        /// Returns the inverted operators dictionary.
+        /// </summary>
+        private static readonly Dictionary<char, char> operatorsCorrespondency = new Dictionary<char, char>(){
+            {'╔','|'},
+            {'╖','.'},
+            {'╗','*'},
+            {'╘','+'},
+            {'╙','('},
+            {'╚',')'}
+        };
+
+        /// <summary>
+        /// Returns the operators dictionary. The key is the operator in the
+        /// regular expresion and the value is the operator in the reverse 
+        /// polish like notation.
+        /// </summary>
+        public static Dictionary<char, char> Correspondency => operatorsCorrespondency;
 
         /// <summary>
         /// Returns the expresion parsed in an reverse polish like notation adjusted
-        /// for the regular expresion operators.
+        /// for the regular expresion operators. If the expresion contains enclosured
+        /// by double quotes operators, they will be replaced by the corresponding
+        /// operator in the operators dictionary.
         /// </summary>
         /// <param name="exp">Expresion to be parsed.</param>
         /// <returns>Parsed expresion</returns>
         /// <exception cref="Exception"></exception>
         internal static string Parse(string exp)
         {
-            if (exp == null) return "";
-            if (!CheckExp(exp))
-                throw new Exception("The expresion contains undefined operators");
+            string refactoredExp = exp;
+            foreach (var key in operators.Keys)
+                refactoredExp = refactoredExp.Replace(
+                    string.Format("(<{0}>)", key),
+                    operators[key].ToString());
+
+            if (refactoredExp == null) return "";
 
             operatorStack.Clear();
             outputQueue.Clear();
 
-            foreach (char c in exp)
+            foreach (char c in refactoredExp)
             {
-                if (char.IsLetterOrDigit(c) ||
-                    extraAlphabet.Contains(c) ||
-                    c == '*' ||
-                    c == '+')
-                    outputQueue.Enqueue(c);
-                else if (c == '.' || c == '(')
+                if (c == '.' || c == '(')
                     operatorStack.Push(c);
                 else if (c == '|')
                 {
@@ -68,7 +88,7 @@ namespace Compilador.RegexInterpreter
                     }
                     operatorStack.Push(c);
                 }
-                else
+                else if (c == ')')
                 {
                     while (operatorStack.Peek() != '(')
                     {
@@ -78,6 +98,8 @@ namespace Compilador.RegexInterpreter
                     }
                     operatorStack.Pop();
                 }
+                else
+                    outputQueue.Enqueue(c);
             }
 
             while (operatorStack.Count > 0)
@@ -86,23 +108,6 @@ namespace Compilador.RegexInterpreter
             }
 
             return GetOutputString();
-        }
-
-        /// <summary>
-        /// Checks whether exp contains characters that are either
-        /// numbers, letters or defined operators.
-        /// </summary>
-        /// <param name="exp"> string beign cheked </param>
-        /// <returns> If the expresion is valid returns true,
-        /// else returns false. </returns>
-        private static bool CheckExp(string exp)
-        {
-            foreach (char c in exp)
-                if (!operators.Contains(c) &&
-                    !char.IsLetterOrDigit(c) &&
-                    !extraAlphabet.Contains(c))
-                    return false;
-            return true;
         }
 
         /// <summary>

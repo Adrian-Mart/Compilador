@@ -24,19 +24,24 @@ namespace Compilador.RegexInterpreter
 
             foreach (char c in parsedExp)
             {
-                if (char.IsLetterOrDigit(c) || Parser.ExtraAlphabet.Contains(c))
-                {
-                    values.Push(c.ToString());
-                    if(!alphabet.Contains(c)) alphabet.Add(c);
-                }
-                else if (c == '|')
+                if (c == '|')
                     nodeIndex = OrEdgeInfo(edgeInfo, nodeIds, values, nodeIndex);
                 else if (c == '.')
                     nodeIndex = JoinEdgeInfo(edgeInfo, nodeIds, values, nodeIndex);
                 else if (c == '+')
                     nodeIndex = PlusEdgeInfo(edgeInfo, nodeIds, values, nodeIndex);
-                else
+                else if (c == '*')
                     nodeIndex = StarEdgeInfo(edgeInfo, nodeIds, values, nodeIndex);
+                else
+                {
+                    var transition = c;
+                    if (Parser.Correspondency.ContainsKey(c))
+                        transition = Parser.Correspondency[c];
+
+                    values.Push(transition.ToString());
+                    if (!alphabet.Contains(transition))
+                        alphabet.Add(transition);
+                }
             }
 
             if (values.Count > 1) throw new Exception(
