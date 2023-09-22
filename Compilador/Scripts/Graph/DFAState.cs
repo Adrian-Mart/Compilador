@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Graph
+namespace Compilador.Graph
 {
     /// <summary>
     /// Represents a state in a deterministic finite automaton (DFA).

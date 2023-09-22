@@ -6,8 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegexInterpreter
+namespace Compilador.RegexInterpreter
 {
+    /// <summary>
+    /// Class used for parsing the regular expresion to a reverse polish notation like.
+    /// </summary>
     internal static class Parser
     {
         /// <summary>
@@ -23,12 +26,12 @@ namespace RegexInterpreter
         /// Extra symbols that are allowed in any the expresion.
         /// The default symbols are digits and letters.
         /// </summary>
-        private static char[] extraAlphabet = new char[] { ' ', '!'};
+        private static char[] extraAlphabet = new char[] { ' ', '!' };
 
         /// <summary>
         /// Contains all the valid operators including ( and ).
         /// </summary>
-        private static char[] operators = new char[] {'|', '+', '*', '.', '(', ')'};
+        private static char[] operators = new char[] { '|', '+', '*', '.', '(', ')' };
 
         public static char[] ExtraAlphabet { get => extraAlphabet; }
 
@@ -50,13 +53,16 @@ namespace RegexInterpreter
 
             foreach (char c in exp)
             {
-                if(char.IsLetterOrDigit(c) || extraAlphabet.Contains(c) || c == '*' || c == '+')
+                if (char.IsLetterOrDigit(c) ||
+                    extraAlphabet.Contains(c) ||
+                    c == '*' ||
+                    c == '+')
                     outputQueue.Enqueue(c);
                 else if (c == '.' || c == '(')
                     operatorStack.Push(c);
                 else if (c == '|')
                 {
-                    while(operatorStack.Count > 0 && operatorStack.Peek() == '.')
+                    while (operatorStack.Count > 0 && operatorStack.Peek() == '.')
                     {
                         outputQueue.Enqueue(operatorStack.Pop());
                     }
@@ -64,7 +70,7 @@ namespace RegexInterpreter
                 }
                 else
                 {
-                    while (operatorStack.Peek() != '(') 
+                    while (operatorStack.Peek() != '(')
                     {
                         if (operatorStack.Count == 0)
                             throw new Exception("Mismatched parentheses");
@@ -74,7 +80,7 @@ namespace RegexInterpreter
                 }
             }
 
-            while(operatorStack.Count > 0)
+            while (operatorStack.Count > 0)
             {
                 outputQueue.Enqueue(operatorStack.Pop());
             }
@@ -92,7 +98,9 @@ namespace RegexInterpreter
         private static bool CheckExp(string exp)
         {
             foreach (char c in exp)
-                if (!operators.Contains(c) && !char.IsLetterOrDigit(c) && !extraAlphabet.Contains(c))
+                if (!operators.Contains(c) &&
+                    !char.IsLetterOrDigit(c) &&
+                    !extraAlphabet.Contains(c))
                     return false;
             return true;
         }
@@ -105,7 +113,7 @@ namespace RegexInterpreter
         private static string GetOutputString()
         {
             StringBuilder builder = new StringBuilder();
-            while(outputQueue.Count > 0)
+            while (outputQueue.Count > 0)
             {
                 builder.Append(outputQueue.Dequeue());
             }

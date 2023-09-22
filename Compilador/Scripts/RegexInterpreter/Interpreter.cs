@@ -1,4 +1,4 @@
-﻿using Graph;
+﻿using Compilador.Graph;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -7,7 +7,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RegexInterpreter
+namespace Compilador.RegexInterpreter
 {
     internal static class Interpreter
     {

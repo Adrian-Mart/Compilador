@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Graph
+namespace Compilador.Graph
 {
     /// <summary>
     /// Edge class. Represents an edge in the graph and contains the
