@@ -9,10 +9,21 @@ namespace Compilador.Graph
     /// <summary>
     /// Represents a state in a deterministic finite automaton (DFA).
     /// </summary>
-    public class DFAState
+    internal class DFAState
     {
+        /// <summary>
+        /// The ID of the state.
+        /// </summary>
         private int id;
+
+        /// <summary>
+        /// A value indicating whether the state is a final state.
+        /// </summary>
         private bool isFinal;
+
+        /// <summary>
+        /// The transitions of the state.
+        /// </summary>
         private Dictionary<char, DFAState> transitions;
             
         /// <summary>

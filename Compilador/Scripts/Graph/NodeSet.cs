@@ -6,17 +6,41 @@ using System.Threading.Tasks;
 
 namespace Compilador.Graph
 {
+    /// <summary>
+    /// Represents a set of nodes in a graph.
+    /// </summary>
     internal class NodeSet
     {
+        /// <summary>
+        /// The reachable nodes from each of the nodes in the set.
+        /// </summary>
         private NodeSet[]? transitions;
+        /// <summary>
+        /// An empty set of nodes.
+        /// </summary>
         private static NodeSet emptySet = new NodeSet();
+        /// <summary>
+        /// A value indicating whether the set is a final state.
+        /// </summary>
         private bool isFinal;
 
+        /// <summary>
+        /// The IDs of the nodes in the set.
+        /// </summary>
         private List<int> nodesIds;
+        /// <summary>
+        /// Gets the number of nodes in the set.
+        /// </summary>
         internal int Count { get => nodesIds.Count; }
+        /// <summary>
+        /// Gets the reachable nodes from each of the nodes in the set.
+        /// </summary>
         internal NodeSet[]? Transitions { get => transitions; }
         public bool IsFinal { get => isFinal; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodeSet"/> class.
+        /// </summary>
         internal NodeSet()
         {
             nodesIds = new List<int>();
@@ -24,6 +48,11 @@ namespace Compilador.Graph
             isFinal = false;
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current object.</param>
+        /// <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
@@ -36,6 +65,12 @@ namespace Compilador.Graph
             }
             return true;
         }
+
+        /// <summary>
+        /// Adds a node to the set.
+        /// </summary>
+        /// <param name="n">The ID of the node to add.</param>
+        /// <param name="isFinal">Whether the node is a final state.</param>
         internal void AddNode(int n, bool isFinal)
         {
             if (nodesIds.Contains(n))
@@ -45,6 +80,15 @@ namespace Compilador.Graph
             this.isFinal = isFinal;
         }
 
+        /// <summary>
+        /// Adds a set of nodes to the set.
+        /// </summary>
+        /// <param name="nodes">
+        /// An array of IDs of the nodes to add.
+        /// </param>
+        /// <param name="hasFinals">
+        /// Whether at least on of the nodes is a final state.
+        /// </param>
         private void AddNode(int[] nodes, bool hasFinals)
         {
             foreach (var n in nodes)
@@ -53,11 +97,30 @@ namespace Compilador.Graph
             }
         }
 
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <summary>
+        /// Gets the transition for the specified symbol.
+        /// </summary>
+        /// <param name="symbolIndex">
+        /// The index of the symbol in the alphabet.
+        /// </param>
+        /// <param name="transitionTable">
+        /// The transition table.
+        /// </param>
+        /// <param name="finalStates">
+        /// The final states.
+        /// </param>
+        /// <returns>
+        /// The transition for the specified symbol.
+        /// </returns>
         private NodeSet GetTransition(int symbolIndex, int[,][] transitionTable, int[] finalStates)
         {
             if (nodesIds.Count == 0) return emptySet;
@@ -80,6 +143,12 @@ namespace Compilador.Graph
             return set;
         }
 
+        /// <summary>
+        /// Calculates the transitions for the set.
+        /// </summary>
+        /// <param name="alphabetLength">The length of the alphabet.</param>
+        /// <param name="transitionTable">The transition table.</param>
+        /// <param name="finalStates">The final states.</param>
         internal void CalculateTransitions(int alphabetLength, int[,][] transitionTable, int[] finalStates)
         {
             transitions = new NodeSet[alphabetLength];
@@ -89,6 +158,12 @@ namespace Compilador.Graph
             }
         }
 
+        /// <summary>
+        /// Calculates the edge information for the set.
+        /// </summary>
+        /// <param name="q">The Q set.</param>
+        /// <param name="alphabet">The alphabet of the language defined by the regex.</param>
+        /// <returns>The edge information for the set.</returns>
         internal EdgeInfo[] CalculateEdgeInfo(in List<NodeSet> q, char[] alphabet)
         {
             int index = q.IndexOf(this);
@@ -102,7 +177,7 @@ namespace Compilador.Graph
             }
             return info.ToArray();
         }
-
+        
         public override string? ToString()
         {
             if (this == emptySet) return " - ";
@@ -128,6 +203,10 @@ namespace Compilador.Graph
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets the name of the set.
+        /// </summary>
+        /// <returns>A String that represents the name of the set.</returns>
         internal string Name()
         {
             if (nodesIds.Count == 0) return "E";

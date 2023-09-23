@@ -15,6 +15,9 @@ namespace Compilador.IO
         /// </summary>
         private protected string fileExtension = ".txt";
 
+        /// <summary>
+        /// The processor in charge of processing the input.
+        /// </summary>
         private protected IProcessor processor;
 
         /// <summary>

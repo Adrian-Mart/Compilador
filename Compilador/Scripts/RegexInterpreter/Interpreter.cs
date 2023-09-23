@@ -2,34 +2,68 @@
 
 namespace Compilador.RegexInterpreter
 {
+    /// <summary>
+    /// Class that interprets a regular expression and returns a DFA.
+    /// </summary>
     internal static class Interpreter
     {
 
+        /// <summary>
+        /// Interprets a regular expression and returns a DFA.
+        /// </summary>
+        /// <param name="exp">
+        /// Expression to interpret.
+        /// </param>
+        /// <returns>
+        /// ITester object that represents the DFA and can 
+        /// test whether a string belongs to the language 
+        /// defined by the expression.
+        /// </returns>
         internal static ITester Interpret(string exp)
         {
             string interpretedExp;
             return Interpret(exp, out interpretedExp);
         }
 
+        /// <summary>
+        /// Interprets a regular expression and returns a DFA.
+        /// </summary>
+        /// <param name="exp">Expression to interpret.</param>
+        /// <param name="interpretedExp">A string containing 
+        /// the interpreted expression. Mainly for debugging purposes.</param>
+        /// <returns>
+        /// ITester object that represents the DFA and can 
+        /// test whether a string belongs to the language 
+        /// defined by the expression.
+        /// </returns>
+        /// <exception cref="System.Exception"></exception>
+        /// <exception cref="Exception"></exception>
         internal static ITester Interpret(string exp, out string interpretedExp)
         {
+            // If the expression is empty, throw an exception.
             if (exp == null || exp.Length == 0) throw new System.Exception("Empty expression.");
+            // If the expression is a single character, return a UnitaryDFA.
             else if (exp.Length == 1)
             {
                 interpretedExp = exp;
                 return new UnitaryDFA(exp[0]);
             }
 
+            // If the expression is not empty, interpret it.
             List<char> alphabet = new List<char>();
             List<EdgeInfo> edgeInfo = new List<EdgeInfo>();
             Stack<string> values = new Stack<string>();
             Stack<int> nodeIds = new Stack<int>();
             int nodeIndex = -1;
 
+            // Parse the expression.
             string parsedExp = Parser.Parse(exp);
 
+            // For each character in the parsed expression,
             foreach (char c in parsedExp)
             {
+                // Add the corresponding transition to the alphabet and
+                // append the corresponding subgraph to the edgeInfo list.
                 if (c == '|')
                     nodeIndex = OrEdgeInfo(edgeInfo, nodeIds, values, nodeIndex);
                 else if (c == '.')
@@ -50,9 +84,12 @@ namespace Compilador.RegexInterpreter
                 }
             }
 
+            // If the expression was not parsed correctly, throw an exception.
             if (values.Count > 1) throw new Exception(
                 string.Format("The parsed expression \"{1}\" {0}",
                 "has more operators or values than expected", parsedExp));
+
+            // If the expression was parsed correctly, return the DFA.
             int end = nodeIds.Pop();
             int start = nodeIds.Pop();
             alphabet.Sort();
@@ -61,6 +98,16 @@ namespace Compilador.RegexInterpreter
             return temp.Automata;
         }
 
+        
+        /// <summary>
+        /// Adds edges and nodes to the given edgeInfo list, representing the '|' operator
+        /// between two elements.
+        /// </summary>
+        /// <param name="edgeInfo">The list of EdgeInfo objects to add the edges to.</param>
+        /// <param name="nodeIds">The stack of node IDs to use for creating new nodes.</param>
+        /// <param name="values">The stack of string values to use for creating new nodes.</param>
+        /// <param name="nodeIndex">The index of the current node.</param>
+        /// <returns>The index of the last node added to the edgeInfo list.</returns>
         private static int OrEdgeInfo(List<EdgeInfo> edgeInfo, Stack<int> nodeIds, Stack<string> values, int nodeIndex)
         {
             string b = values.Pop();
@@ -119,6 +166,14 @@ namespace Compilador.RegexInterpreter
             return nodeIndex + 6;
         }
 
+        /// <summary>
+        /// Adds edges and nodes to the given edgeInfo list, representing the '.' operator between two elements.
+        /// </summary>
+        /// <param name="edgeInfo">The list of EdgeInfo objects to add the edges to.</param>
+        /// <param name="nodeIds">The stack of node IDs to use for creating new nodes.</param>
+        /// <param name="values">The stack of string values to use for creating new nodes.</param>
+        /// <param name="nodeIndex">The index of the current node.</param>
+        /// <returns>The index of the last node added to the edgeInfo list.</returns>
         private static int JoinEdgeInfo(List<EdgeInfo> edgeInfo, Stack<int> nodeIds, Stack<string> values, int nodeIndex)
         {
             // a.b ->  1-a>2, 2-b>3
@@ -172,6 +227,14 @@ namespace Compilador.RegexInterpreter
             return nodeIndex + 3;
         }
 
+        /// <summary>
+        /// Adds edges and nodes to the given edgeInfo list, representing the '*' operator.
+        /// </summary>
+        /// <param name="edgeInfo">The list of EdgeInfo objects to add the edges to.</param>
+        /// <param name="nodeIds">The stack of node IDs to use for creating new nodes.</param>
+        /// <param name="values">The stack of string values to use for creating new nodes.</param>
+        /// <param name="nodeIndex">The index of the current node.</param>
+        /// <returns>The index of the last node added to the edgeInfo list.</returns>
         private static int StarEdgeInfo(List<EdgeInfo> edgeInfo, Stack<int> nodeIds, Stack<string> values, int nodeIndex)
         {
             // a*  ->  1-e>2, 2-a>3, 3-e>4, 3-e>2, 1-e>4
@@ -201,6 +264,14 @@ namespace Compilador.RegexInterpreter
             return nodeIndex + 4;
         }
 
+        /// <summary>
+        /// Adds edges and nodes to the given edgeInfo list, representing the '+' operator.
+        /// </summary>
+        /// <param name="edgeInfo">The list of EdgeInfo objects to add the edges to.</param>
+        /// <param name="nodeIds">The stack of node IDs to use for creating new nodes.</param>
+        /// <param name="values">The stack of string values to use for creating new nodes.</param>
+        /// <param name="nodeIndex">The index of the current node.</param>
+        /// <returns>The index of the last node added to the edgeInfo list.</returns>
         private static int PlusEdgeInfo(List<EdgeInfo> edgeInfo, Stack<int> nodeIds, Stack<string> values, int nodeIndex)
         {
             // a+  ->  1-e>2, 2-a>3, 3-e>4, 3-e>2

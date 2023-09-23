@@ -27,8 +27,18 @@ namespace Compilador.Graph
         /// </summary>
         private char transition;
 
+        /// <summary>
+        /// Transition character from the start node 
+        /// to the end node
+        /// </summary>
         internal char Transition { get => transition; }
+        /// <summary>
+        /// Node end which the edge goes
+        /// </summary>
         internal Node End { get => end; }
+        /// <summary>
+        /// Node start from which the edge starts
+        /// </summary>
         internal Node Start { get => start; }
 
         /// <summary>
@@ -46,7 +56,10 @@ namespace Compilador.Graph
             this.transition = transition;
         }
 
-
+        /// <summary>
+        /// Returns a string representation of the edge.
+        /// </summary>
+        /// <returns> A string with the format [start]-[transition]>[end].</returns>
         public override string? ToString()
         {
             return string.Format("{0}-{1}>{2}", start, transition, end);

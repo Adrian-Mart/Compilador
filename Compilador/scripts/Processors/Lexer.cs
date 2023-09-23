@@ -129,6 +129,12 @@ namespace Compilador.Processors
             return null;
         }
 
+        /// <summary>
+        /// Clears the input string from comments, empty lines and spaces.
+        /// </summary>
+        /// <param name="input">Input text</param>
+        /// <returns>A string with the input text without comments, empty
+        /// lines and spaces.</returns>
         private string ClearInput(string input)
         {
             StringBuilder sb = new StringBuilder();

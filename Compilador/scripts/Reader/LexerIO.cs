@@ -7,15 +7,61 @@ using Compilador.RegexInterpreter;
 
 namespace Compilador.IO
 {
+    /// <summary>
+    /// LexerIO class that reads a processor file and creates a Lexer 
+    /// object based on the automatas and tokens defined in the file.
+    /// </summary>
+    /// <remarks>
+    /// This class inherits from the ProcessorIO class and overrides the 
+    /// GetProcessorFromFile method to create a Lexer object.
+    /// </remarks>
     public class LexerIO : FileIO
     {
+        /// <summary>
+        /// The DFA of the lexer.
+        /// </summary>
         private List<ITester> automatas = new List<ITester>();
+        /// <summary>
+        /// The tokens of the lexer.
+        /// </summary>
         private List<string> tokens = new List<string>();
+        /// <summary>
+        /// The setup of the lexer.
+        /// </summary>
         private LexerSetup setup = LexerSetup.DefaultSetup;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LexerIO"/> class.
+        /// </summary>
+        /// <param name="fileExtension">
+        /// Sets the file extension of the output file.
+        /// </param>
+        /// <param name="processorPath">
+        /// String containing the path to the processor file.
+        /// </param>
         public LexerIO(string fileExtension, string processorPath) : base(fileExtension, processorPath) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LexerIO"/> class.
+        /// With the default file extension (.tks).
+        /// </summary>
+        /// <param name="processorPath">
+        /// String containing the path to the processor file.
+        /// </param>
         public LexerIO(string processorPath) : base(".tks", processorPath) { }
 
+        /// <summary>
+        /// Splits the text by lines and then by separators.
+        /// </summary>
+        /// <param name="text">
+        /// The text to split.
+        /// </param>
+        /// <param name="firstLine">
+        /// Null if first line is not setup, otherwise contains the first line.
+        /// </param>
+        /// <returns>
+        /// A 2D array containing the regex and token for each line.
+        /// </returns>
         private string[,] SplitRegexAndTokens(string text, out string? firstLine)
         {
             // Vars to check if first line is setup
@@ -63,6 +109,16 @@ namespace Compilador.IO
             return input;
         }
 
+        /// <summary>
+        /// Adds an automata and its token to the lexer.
+        /// </summary>
+        /// <param name="regex">
+        /// A string containing the regex for this token.
+        /// </param>
+        /// <param name="token">
+        /// A string containing the token of this regex.
+        /// </param>
+        /// <exception cref="Exception"></exception>
         private void AddAutomatas(string regex, string token)
         {
             automatas.Add(Interpreter.Interpret(regex));
@@ -72,6 +128,12 @@ namespace Compilador.IO
                 throw new Exception("Automatas and tokens count mismatch.");
         }
 
+        /// <summary>
+        /// Sets the DFA from each regex for each token.
+        /// </summary>
+        /// <param name="input">
+        /// The input array containing the regex and token for each line.
+        /// </param>
         private void SetAutomatas(string[,] input)
         {
             automatas.Clear();
@@ -83,6 +145,15 @@ namespace Compilador.IO
             }
         }
 
+        /// <summary>
+        /// Gets a processor (<seealso cref="Lexer"/>) from the specified file path.
+        /// </summary>
+        /// <param name="processorPath">
+        /// The path of the file containing the processor data.
+        /// </param>
+        /// <returns>
+        /// A processor (<seealso cref="Lexer"/>) from the specified file path.
+        /// </returns>
         private protected override IProcessor GetProcessorFromFile(string processorPath)
         {
             string? firstLine;
@@ -100,6 +171,11 @@ namespace Compilador.IO
             return new Lexer(automatas, tokens, setup);
         }
 
+        /// <summary>
+        /// Sets the setup of the lexer.
+        /// </summary>
+        /// <param name="firstLine">The first line containing the setup</param>
+        /// <exception cref="Exception"></exception>
         private void SetSetup(string? firstLine)
         {
             if (firstLine == null)
