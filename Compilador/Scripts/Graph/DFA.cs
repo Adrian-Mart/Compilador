@@ -10,7 +10,7 @@ namespace Compilador.Graph
     /// <summary>
     /// Represents a deterministic finite automaton (DFA).
     /// </summary>
-    public class DFA
+    public class DFA: ITester
     {
         /// <summary>
         /// A dictionary that maps state IDs to DFAState objects
@@ -62,8 +62,8 @@ namespace Compilador.Graph
             if (s == "") return startState.IsFinal;
             if (!StringInAlphabet(s, out errorIndex))
             {
-                Console.WriteLine(string.Format("Undefined char. Error in char {0} of {1}: {2}",
-                    errorIndex, s, s[errorIndex]));
+                //Console.WriteLine(string.Format("Undefined char. Error in char {0} of {1}: {2}",
+                //    errorIndex, s, s[errorIndex]));
                 return false;
             }
 
@@ -75,15 +75,15 @@ namespace Compilador.Graph
                     return false;
                 if (!actualState.TryTransition(c, out actualState))
                 {
-                    Console.WriteLine(string.Format("Misplaced char. Error in char {0} of {1}: {2}",
-                        errorIndex, s, c));
+                    //Console.WriteLine(string.Format("Misplaced char. Error in char {0} of {1}: {2}",
+                    //    errorIndex, s, c));
                     return false;
                 }
                 errorIndex++;
             }
-            if (!actualState.IsFinal)
-                Console.WriteLine(string.Format("Incomplete expresion. Error in char {0} of {1}: {2}",
-                    errorIndex - 1, s, s[errorIndex - 1]));
+            //if (!actualState.IsFinal)
+                //Console.WriteLine(string.Format("Incomplete expresion. Error in char {0} of {1}: {2}",
+                //    errorIndex - 1, s, s[errorIndex - 1]));
             return actualState.IsFinal;
         }
 

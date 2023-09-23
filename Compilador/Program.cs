@@ -1,19 +1,20 @@
-﻿using Graph;
-using RegexInterpreter;
+﻿using Compilador.Graph;
+using Compilador.IO;
+using Compilador.RegexInterpreter;
 
-namespace Compilador // Note: actual namespace depends on the project name.
+namespace Compilador
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            string e = "(h|H).(o|O).(l|L).(a|A). .(a|b|c|d|e|f|g|h|i|j|k|l|m|n|ñ|o|p|q|r|s|t|u|v|w|x|y|z| )+.!";
+            /* string e = "a";
             Console.Write("Expression: " + e + " \t Parsed: ");
             Console.Write(Parser.Parse(e));
             Console.Write(" \t Interpreted: ");
-            var temp = Interpreter.Interpret(e);
-            DFA automata = temp.Automata;
-            Console.WriteLine(temp.ToString());
+            string interpretedExp;
+            var automata = Interpreter.Interpret(e, out interpretedExp);
+            Console.WriteLine(interpretedExp);
 
             string? testing = "";
             while (testing != "Exit")
@@ -22,7 +23,12 @@ namespace Compilador // Note: actual namespace depends on the project name.
                 testing = Console.ReadLine();
                 if (testing == null) break;
                 Console.WriteLine(automata.TestString(testing));
-            }
+            } */
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            basePath = basePath.Replace("\\bin\\Debug\\net7.0", "");
+
+            LexerIO lexerIO = new LexerIO(basePath + "test\\LexerData.lxr");
+            lexerIO.WriteFileContent(basePath + "test\\Code.clsr");
         }
     }
 }

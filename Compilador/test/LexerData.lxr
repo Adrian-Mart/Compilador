@@ -1,0 +1,22 @@
+# Comentario jeje
+# Otro comentario :)
+#
+# Para declarar la configuracion se usa la cadena ":D" seguida de las configuraciones
+# encerradas entre corchetes. La primera configuracion es el caracter que define la separación
+# entre tokens. La segunda configuracion es el caracter que define el fin de linea.
+# La tercera configuracion es el caracter que define el inicio de un comentario de una linea.
+# La cuarta define el nombre del token que se le asignara al fin de linea.
+# La quinta configuracion indica (Y - si, N - no) si se aceptan cadenas de texto. Si no se define
+# la sexta configuracion, su valor por defecto será N. La septima configuracion (opcional si 
+# la 3ra es N) define el caracter entre las que se encierran las cadenas de texto. La octava 
+# configuracion (opcional si la 3ra es N) define el nombre del token
+# que se le asignara a las cadenas de texto.
+#
+:D{ ,\n,#,N_LINEA,Y,",CADENA}
+# Despues de la configuracion se declaran los tokens. Cada token se declara en una linea.
+# El formato es el siguiente:
+# <expresion_regular> <nombre_token> 
+c.l.a.s.e CLASE
+(a|b|c|d|e|f|g|h|i|j|k|l|m|n|ñ|o|p|q|r|s|t|u|v|w|x|y|z|_)+ NOMBRE
+(0|1|2|3|4|5|6|7|8|9)+ NUMERO
+= ASIGNACION

@@ -1,19 +1,25 @@
 ﻿using Compilador.Graph;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Compilador.RegexInterpreter
 {
     internal static class Interpreter
     {
 
-        internal static TempDFA Interpret(string exp)
+        internal static ITester Interpret(string exp)
         {
+            string interpretedExp;
+            return Interpret(exp, out interpretedExp);
+        }
+
+        internal static ITester Interpret(string exp, out string interpretedExp)
+        {
+            if (exp == null || exp.Length == 0) throw new System.Exception("Empty expression.");
+            else if (exp.Length == 1)
+            {
+                interpretedExp = exp;
+                return new UnitaryDFA(exp[0]);
+            }
+
             List<char> alphabet = new List<char>();
             List<EdgeInfo> edgeInfo = new List<EdgeInfo>();
             Stack<string> values = new Stack<string>();
@@ -50,7 +56,9 @@ namespace Compilador.RegexInterpreter
             int end = nodeIds.Pop();
             int start = nodeIds.Pop();
             alphabet.Sort();
-            return new TempDFA(start, end, edgeInfo.ToArray(), alphabet.ToArray());
+            interpretedExp = values.Pop();
+            var temp = new TempDFA(start, end, edgeInfo.ToArray(), alphabet.ToArray());
+            return temp.Automata;
         }
 
         private static int OrEdgeInfo(List<EdgeInfo> edgeInfo, Stack<int> nodeIds, Stack<string> values, int nodeIndex)
