@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System.Text;
 using Compilador.Graph;
 
@@ -6,6 +7,7 @@ namespace Compilador.Processors
     /// <summary>
     /// Represents the setup for the lexer.
     /// </summary>
+    [DataContract, KnownType(typeof(LexerSetup))]
     public class LexerSetup
     {
         /// <summary>
@@ -16,30 +18,37 @@ namespace Compilador.Processors
         /// <summary>
         /// The separator character.
         /// </summary>
+        [DataMember()]
         private char separator = ' ';
         /// <summary>
         /// The line break character.
         /// </summary>
+        [DataMember()]
         private char lineBreak = '\n';
         /// <summary>
         /// The comment character.
         /// </summary>
+        [DataMember()]
         private char comment = '#';
         /// <summary>
         /// A value indicating whether to use text.
         /// </summary>
+        [DataMember()]
         private bool useText = true;
         /// <summary>
         /// The text delimiter character.
         /// </summary>
+        [DataMember()]
         private char textDelimiter = '"';
         /// <summary>
         /// The text delimiter token.
         /// </summary>
+        [DataMember()]
         private string textDelimiterToken = "TEXT_DELIMITER";
         /// <summary>
         /// The line break token.
         /// </summary>
+        [DataMember()]
         private string lineBreakToken = "NEW_LINE";
 
         /// <summary>

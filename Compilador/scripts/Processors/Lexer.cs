@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System.Text;
 using Compilador.Graph;
 
@@ -6,20 +7,24 @@ namespace Compilador.Processors
     /// <summary>
     /// The Lexer class is responsible for tokenizing input strings using a list of DFAs (Deterministic Finite Automata) and a list of tokens.
     /// </summary>
+    [DataContract, KnownType(typeof(LexerSetup)), KnownType(typeof(DFA)), KnownType(typeof(UnitaryDFA))]
     public class Lexer : IProcessor
     {
         /// <summary>
         /// The setup for the lexer.
         /// </summary>
+        [DataMember()]
         LexerSetup setup;
 
         /// <summary>
         /// The list of DFAs to use for tokenization.
         /// </summary>
+        [DataMember()]
         List<ITester> automatas = new List<ITester>();
         /// <summary>
         /// The list of tokens to use for tokenization.
         /// </summary>
+        [DataMember()]
         List<string> tokens = new List<string>();
 
         /// <summary>
@@ -48,8 +53,10 @@ namespace Compilador.Processors
                 var tempText = input.Split(setup.TextDelimiter);
                 // Check if the text delimiter count is even
                 if (tempText.Length % 2 == 0)
+                {
+                    Console.WriteLine("Lexical error: You started a string but didn't finish it. How frustrating.");
                     throw new Exception("Invalid text delimiter count.");
-
+                }
                 // Replace the text delimiter with a special character
                 StringBuilder sb = new StringBuilder();
                 int index = 0;
@@ -68,9 +75,11 @@ namespace Compilador.Processors
             // Clear the input string
             input = ClearInput(input);
 
+            int lineCount = 0;
             // Split the input string into lines
             foreach (var line in input.Split(setup.LineBreak))
             {
+                lineCount++;
                 // Split the line into lexemes
                 foreach (var lexeme in line.Split(setup.Separator))
                 {
@@ -81,8 +90,16 @@ namespace Compilador.Processors
                     if (token != null)
                         tokenStream.Add(token);
                     else
+                    {
                         // If the lexeme is not a token, throw an exception.
-                        throw new Exception("No match found for input string: " + lexeme);
+                        Console.WriteLine(
+                            string.Format(
+                                "Lexical error in line {0}: {1} has no matching token. Is it lonely like me?",
+                                lineCount, lexeme)
+                        );
+                        throw new Exception("No token was found for <" + lexeme + ">, just as lonely as I am.");
+                    }
+
                 }
 
                 tokenStream.Add(setup.LineBreakToken);
@@ -156,6 +173,31 @@ namespace Compilador.Processors
             sb.Remove(sb.Length - 1, 1);
             // Return the list of tokens.
             return sb.ToString();
+        }
+
+        public void Serialize(string fileName)
+        {
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                DataContractSerializerSettings settings = new DataContractSerializerSettings
+                {
+                    PreserveObjectReferences = true
+                };
+                DataContractSerializer obj = new DataContractSerializer(typeof(Lexer), settings);
+                obj.WriteObject(writer.BaseStream, this);
+            }
+        }
+
+        public static IProcessor? Deserialize(string fileName)
+        {
+            Lexer? lexer = null;
+            using (StreamReader writer = new StreamReader(fileName))
+            {
+                DataContractSerializer obj = 
+                    new DataContractSerializer(typeof(Lexer));
+                lexer = (Lexer?)obj.ReadObject(writer.BaseStream);
+            }
+            return lexer;
         }
     }
 }

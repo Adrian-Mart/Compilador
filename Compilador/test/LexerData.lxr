@@ -12,11 +12,45 @@
 # configuracion (opcional si la 3ra es N) define el nombre del token
 # que se le asignara a las cadenas de texto.
 #
-:D{ ,\n,#,N_LINEA,Y,",CADENA}
+:D{ ,\n,#,NEW_LINE,Y,",STRING}
 # Despues de la configuracion se declaran los tokens. Cada token se declara en una linea.
 # El formato es el siguiente:
-# <expresion_regular> <nombre_token> 
-c.l.a.s.e CLASE
-(a|b|c|d|e|f|g|h|i|j|k|l|m|n|ñ|o|p|q|r|s|t|u|v|w|x|y|z|_)+ NOMBRE
-(0|1|2|3|4|5|6|7|8|9)+ NUMERO
-= ASIGNACION
+# <expresion_regular> <nombre_token>
+q.u.a.c.k._.i.f         IF
+q.u.a.c.k._.m.a.y.b.e   ELSE_IF
+q.u.a.c.k._.n.o         ELSE
+p.o.n.d                 DEF
+q.u.a.c.k._.i.t         PRINT
+d.u.c.k._.f.l.o.a.t       FLOAT_KEYWORD
+d.u.c.k._.i.n.t           INT_KEYWORD
+d.u.c.k.s.t.r           STRING_KEYWORD
+q.u.a.c.k.i.e.r         MAIN
+q.u.a.c.k._.b.a.c.k     RETURN
+(<(>).(<*>).(<)>).>     BLOCK_OPEN
+<.(<(>).(<*>).(<)>)     BLOCK_CLOSE
+=                       ASSIGN
+<                       LESS_THAN
+>                       GREATER_THAN
+<.=                     LESS_EQUAL_THAN
+>.=                     GREATER_EQUAL_THAN
+=.=                     EQUAL
+!.=                     NOT_EQUAL
++                       PLUS
+-                       MINUS
+*                       MULTIPLY
+/                       DIVIDE
+%                       MOD
+!                       NOT
+,                       COMMA
+(               PARENTHESIS_OPEN
+)                   PARENTHESIS_CLOSE
+[                       BRACKET_OPEN
+]                       BRACKET_CLOSE
+a.n.d                   AND
+o.r                     OR
+t.r.u.e                 TRUE
+f.a.l.s.e               FALSE
+(q|u|a|c|k|_)+          ID
+j.u.m.p                 JUMP
+0|((1|2|3|4|5|6|7|8|9).(1|2|3|4|5|6|7|8|9|0)*) INT
+(0.(<.>).0)|((1|2|3|4|5|6|7|8|9).(1|2|3|4|5|6|7|8|9|0)*).(<.>).(1|2|3|4|5|6|7|8|9|0)*  FLOAT

@@ -1,13 +1,17 @@
+using System.Runtime.Serialization;
+
 namespace Compilador.Graph
 {
     /// <summary>
     /// Makes a Test that accepts a single character.
     /// </summary>
+    [DataContract, KnownType(typeof(UnitaryDFA))]
     public class UnitaryDFA: ITester
     {
         /// <summary>
         /// The transition that the test accepts.
         /// </summary>
+        [DataMember()]
         private char transition;
 
         /// <summary>

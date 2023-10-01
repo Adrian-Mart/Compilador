@@ -30,25 +30,10 @@ namespace Compilador.IO
         /// </summary>
         private LexerSetup setup = LexerSetup.DefaultSetup;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LexerIO"/> class.
-        /// </summary>
-        /// <param name="fileExtension">
-        /// Sets the file extension of the output file.
-        /// </param>
-        /// <param name="processorPath">
-        /// String containing the path to the processor file.
-        /// </param>
-        public LexerIO(string fileExtension, string processorPath) : base(fileExtension, processorPath) { }
+        public LexerIO(string processorPath, string saveToFilePath) : base(".tks", processorPath, saveToFilePath) { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LexerIO"/> class.
-        /// With the default file extension (.tks).
-        /// </summary>
-        /// <param name="processorPath">
-        /// String containing the path to the processor file.
-        /// </param>
-        public LexerIO(string processorPath) : base(".tks", processorPath) { }
+        public LexerIO(string serialDataPath) : base(".tks", serialDataPath) { }
+
 
         /// <summary>
         /// Splits the text by lines and then by separators.
@@ -125,7 +110,11 @@ namespace Compilador.IO
             tokens.Add(token);
 
             if (automatas.Count() != tokens.Count())
+            {
+                Console.WriteLine("Automatas and tokens count mismatch."
+                + " Have mercy on them, they have no partner, just like me.");
                 throw new Exception("Automatas and tokens count mismatch.");
+            }
         }
 
         /// <summary>
@@ -136,13 +125,18 @@ namespace Compilador.IO
         /// </param>
         private void SetAutomatas(string[,] input)
         {
+            float progress = 0;
+            Console.WriteLine("Creating automatas...");
             automatas.Clear();
             tokens.Clear();
             for (int i = 0; i < input.GetLength(0); i++)
             {
                 if (input[i, 0] != null && input[i, 1] != null)
                     AddAutomatas(input[i, 0], input[i, 1]);
+                progress = (float)i / input.GetLength(0) * 100;
+                Console.WriteLine(string.Concat("  Progress: ", progress, "%, Regex to DFA: ", input[i, 0], " READY"));
             }
+            Console.WriteLine("  Progress: 100%");
         }
 
         /// <summary>
@@ -187,14 +181,30 @@ namespace Compilador.IO
             firstLine = firstLine.Replace("\\t", "\t");
 
             var parts = firstLine.Split(',');
-            if (parts.Length < 4)
-                throw new Exception("Invalid setup.");
-            else if (parts.Length == 4 || parts[2] == "N")
+
+            if (parts.Length == 4 || parts[2] == "N")
                 setup = new LexerSetup(parts[0][0], parts[1][0], parts[2][0], parts[3]);
-            else if ( parts.Length == 7)
+            else if (parts.Length == 7)
                 setup = new LexerSetup(parts[0][0], parts[1][0], parts[2][0], parts[3], true, parts[5][0], parts[6]);
             else
+            {
+                Console.WriteLine("The Lexer configuration is incorrect. Please read the documentation " +
+                "carefully. I put a lot of effort into it.");
                 throw new Exception("Invalid setup.");
+            }
+        }
+
+        private protected override IProcessor GetProcessorFromFile(string processorPath, string saveToFilePath)
+        {
+            Lexer lexer = (Lexer)GetProcessorFromFile(processorPath);
+            lexer.Serialize(saveToFilePath);
+            return lexer;
+        }
+
+        private protected override IProcessor? GetProcessorFromSerialFile(string processorPath)
+        {
+            Lexer? lexer = (Lexer?)Lexer.Deserialize(processorPath);
+            return lexer;
         }
     }
 }

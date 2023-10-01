@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,21 +10,25 @@ namespace Compilador.Graph
     /// <summary>
     /// Represents a state in a deterministic finite automaton (DFA).
     /// </summary>
+    [DataContract, KnownType(typeof(DFAState))]
     internal class DFAState
     {
         /// <summary>
         /// The ID of the state.
         /// </summary>
+        [DataMember()]
         private int id;
 
         /// <summary>
         /// A value indicating whether the state is a final state.
         /// </summary>
+        [DataMember()]
         private bool isFinal;
 
         /// <summary>
         /// The transitions of the state.
         /// </summary>
+        [DataMember()]
         private Dictionary<char, DFAState> transitions;
             
         /// <summary>

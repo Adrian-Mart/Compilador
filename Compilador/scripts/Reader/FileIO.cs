@@ -25,10 +25,21 @@ namespace Compilador.IO
         /// </summary>
         /// <param name="fileExtension">The file extension of the output file.</param>
         /// <param name="processorPath">Path to the processor data.</param>
-        private protected FileIO(string fileExtension, string processorPath)
+        private protected FileIO(string fileExtension, string processorPath, string saveToFilePath)
         {
             this.fileExtension = fileExtension;
-            processor = GetProcessorFromFile(processorPath);
+            processor = GetProcessorFromFile(processorPath, saveToFilePath);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileIO"/> class.
+        /// </summary>
+        /// <param name="fileExtension">The file extension of the output file.</param>
+        /// <param name="processorPath">Path to the serialized processor data.</param>
+        private protected FileIO(string fileExtension, string serialDataPath)
+        {
+            this.fileExtension = fileExtension;
+            processor = GetProcessorFromSerialFile(serialDataPath)?? throw new Exception("Invalid serial data.");
         }
 
         /// <summary>
@@ -95,6 +106,22 @@ namespace Compilador.IO
         /// <param name="processorPath">Path to the processor data.</param>
         /// <returns> Processor obj from the specified file</returns>
         private protected abstract IProcessor GetProcessorFromFile(string processorPath);
+
+        /// <summary>
+        /// Gets the processor from the specified file path and saves it to the specified file path.
+        /// </summary>
+        /// <param name="processorPath">Path to the processor data.</param>
+        /// <param name="saveToFilePath">Path to the file where the
+        /// processor will be saved.</param>
+        /// <returns> Processor obj from the specified file</returns>
+        private protected abstract IProcessor GetProcessorFromFile(string processorPath, string saveToFilePath);
+
+        /// <summary>
+        /// Gets the processor from the specified serialized data file path.
+        /// </summary>
+        /// <param name="processorPath">Path to the serialized processor data.</param>
+        /// <returns> Processor obj from the specified file</returns>
+        private protected abstract IProcessor? GetProcessorFromSerialFile(string processorPath);
     }
 
 }

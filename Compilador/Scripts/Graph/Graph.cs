@@ -50,7 +50,11 @@ namespace Compilador.Graph
             // Check if the number of nodes is valid
             int nodesCount = NodesInDescription(edges);
             if (nodesCount < 2)
+            {
+                Console.WriteLine("DFA definition: Node number is not valid. The minimum number of nodes is 2.");
                 throw new Exception("Node number is not valid. The minimum number of nodes is 2.");
+            }
+                
 
             // Inicialize the dictionary of nodes
             ids = new Dictionary<int, Node>();

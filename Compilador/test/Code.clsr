@@ -1,7 +1,16 @@
-clase compiladores = 123
-clase computo_grafico = 456
-clase sistemas_operativos = 789
-101 nombre clase =
-= clase otro_nombre 112
+# Código para calcular una suma de enteros positivos de forma recursiva
+pond duck_int quack_quack ( duck_int quacku , duck_int quacka )
+(*)>
+    quack_if quacka == 0
+    (*)> 
+        quack_back quacku
+    <(*)
 
-clase compiladores = 123
+    quack_back quack_quack ( quacku + 1 , quacka - 1 )
+<(*)
+
+quackier
+(*)>
+    quack_it ( "Suma de 1 + 5 de forma recursiva" )
+    quack_it ( quack_quack ( 1 , 5 ) )
+<(*)

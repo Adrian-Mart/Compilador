@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -10,20 +11,34 @@ namespace Compilador.Graph
     /// <summary>
     /// Represents a deterministic finite automaton (DFA).
     /// </summary>
-    public class DFA: ITester
+    [DataContract(IsReference = true), KnownType(typeof(DFA)), KnownType(typeof(DFAState))]
+    public class DFA : ITester
     {
         /// <summary>
         /// A dictionary that maps state IDs to DFAState objects
         /// </summary>
+        [DataMember()]
         private Dictionary<int, DFAState> states;
         /// <summary>
         /// The start state of the DFA
         /// </summary>
+        [DataMember()]
         private DFAState startState;
         /// <summary>
         /// The alphabet of the DFA
         /// </summary>
+        [DataMember()]
         private char[] alphabet;
+
+        /// <summary>
+        /// DFA Constructor for serialization purposes.
+        /// </summary>
+        internal DFA(Dictionary<int, DFAState> states, DFAState startState, char[] alphabet)
+        {
+            this.states = states;
+            this.startState = startState;
+            this.alphabet = alphabet;
+        }
 
         /// <summary>
         /// Initializes a new instance of the DFA class.
@@ -82,8 +97,8 @@ namespace Compilador.Graph
                 errorIndex++;
             }
             //if (!actualState.IsFinal)
-                //Console.WriteLine(string.Format("Incomplete expresion. Error in char {0} of {1}: {2}",
-                //    errorIndex - 1, s, s[errorIndex - 1]));
+            //Console.WriteLine(string.Format("Incomplete expresion. Error in char {0} of {1}: {2}",
+            //    errorIndex - 1, s, s[errorIndex - 1]));
             return actualState.IsFinal;
         }
 
@@ -107,4 +122,6 @@ namespace Compilador.Graph
             return true;
         }
     }
+
+
 }
