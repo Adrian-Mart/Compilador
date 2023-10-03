@@ -21,9 +21,9 @@ q.u.a.c.k._.m.a.y.b.e   ELSE_IF
 q.u.a.c.k._.n.o         ELSE
 p.o.n.d                 DEF
 q.u.a.c.k._.i.t         PRINT
-d.u.c.k._.f.l.o.a.t       FLOAT_KEYWORD
-d.u.c.k._.i.n.t           INT_KEYWORD
-d.u.c.k.s.t.r           STRING_KEYWORD
+d.u.c.k._.f.l.o.a.t     FLOAT_KEYWORD
+d.u.c.k._.i.n.t         INT_KEYWORD
+d.u.c.k._.s.t.r           STRING_KEYWORD
 q.u.a.c.k.i.e.r         MAIN
 q.u.a.c.k._.b.a.c.k     RETURN
 (<(>).(<*>).(<)>).>     BLOCK_OPEN
@@ -42,8 +42,8 @@ q.u.a.c.k._.b.a.c.k     RETURN
 %                       MOD
 !                       NOT
 ,                       COMMA
-(               PARENTHESIS_OPEN
-)                   PARENTHESIS_CLOSE
+(                       PARENTHESIS_OPEN
+)                       PARENTHESIS_CLOSE
 [                       BRACKET_OPEN
 ]                       BRACKET_CLOSE
 a.n.d                   AND

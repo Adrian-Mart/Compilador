@@ -50,26 +50,7 @@ namespace Compilador.Processors
             List<string> tokenStream = new List<string>();
             if (setup.UseText)
             {
-                var tempText = input.Split(setup.TextDelimiter);
-                // Check if the text delimiter count is even
-                if (tempText.Length % 2 == 0)
-                {
-                    Console.WriteLine("Lexical error: You started a string but didn't finish it. How frustrating.");
-                    throw new Exception("Invalid text delimiter count.");
-                }
-                // Replace the text delimiter with a special character
-                StringBuilder sb = new StringBuilder();
-                int index = 0;
-                foreach (var item in tempText)
-                {
-                    if (index % 2 == 1)
-                        sb.Append('╔');
-                    else
-                        sb.Append(item);
-                    index++;
-                }
-
-                input = sb.ToString();
+                input = ParseStrings(input);
             }
 
             // Clear the input string
@@ -86,9 +67,9 @@ namespace Compilador.Processors
                     if (lexeme == "")
                         continue;
                     // Identify the token of the lexeme
-                    var token = IdentifyToken(lexeme);
-                    if (token != null)
-                        tokenStream.Add(token);
+                    var token = IdentifyTokens(lexeme);
+                    if (token != null && token.Count > 0)
+                        tokenStream.AddRange(token);
                     else
                     {
                         // If the lexeme is not a token, throw an exception.
@@ -146,6 +127,63 @@ namespace Compilador.Processors
             return null;
         }
 
+        private List<string> IdentifyTokens(string text)
+        {
+            List<string> tokens = new List<string>();
+            return IdentifyTokens(tokens, text);
+        }
+
+        private List<string> IdentifyTokens(List<string> tokens, string text)
+        {
+            if(string.IsNullOrEmpty(text))
+                return tokens;
+
+            StringBuilder mainSb = new StringBuilder();
+            string auxSb = "";
+            mainSb.Append(text);
+            for (int i = text.Length - 1; i >= 0; i--)
+            {
+                string? token = IdentifyToken(mainSb.ToString());
+                
+                if(token == null)
+                {
+                    auxSb = string.Concat(mainSb.ToString().Last(), auxSb);
+                    mainSb.Remove(i, 1);
+                }
+                else
+                {
+                    tokens.Add(token);
+                    break;
+                }
+            }
+            
+            return IdentifyTokens(tokens, auxSb);
+        }
+
+        private string ParseStrings(string input)
+        {
+            var tempText = input.Split(setup.TextDelimiter);
+            // Check if the text delimiter count is even
+            if (tempText.Length % 2 == 0)
+            {
+                Console.WriteLine("Lexical error: You started a string but didn't finish it. How frustrating.");
+                throw new Exception("Invalid text delimiter count.");
+            }
+            // Replace the text delimiter with a special character
+            StringBuilder sb = new StringBuilder();
+            int index = 0;
+            foreach (var item in tempText)
+            {
+                if (index % 2 == 1)
+                    sb.Append('╔');
+                else
+                    sb.Append(item);
+                index++;
+            }
+
+            return sb.ToString();
+        }
+
         /// <summary>
         /// Clears the input string from comments, empty lines and spaces.
         /// </summary>
@@ -193,7 +231,7 @@ namespace Compilador.Processors
             Lexer? lexer = null;
             using (StreamReader writer = new StreamReader(fileName))
             {
-                DataContractSerializer obj = 
+                DataContractSerializer obj =
                     new DataContractSerializer(typeof(Lexer));
                 lexer = (Lexer?)obj.ReadObject(writer.BaseStream);
             }
