@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Compilador.Graph;
 using Compilador.Processors;
+using Compilador.Processors.Lexer;
 using Compilador.RegexInterpreter;
 
 namespace Compilador.IO

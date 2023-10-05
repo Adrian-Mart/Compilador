@@ -1,0 +1,18 @@
+# Para seleccionar el nombre de la no terminal inicial usar "& Start <nombre>"
+& Start S
+# Para definir las no terminales usar "& Non terminals [<nombre1> <nombre2> ... <nombreN>]"
+& Non terminals: [S E E' T T' F]
+# Para definir los terminales usar "& Terminals [<nombre1> <nombre2> ... <nombreN>]"
+& Terminals: [+ * ( ) id ~]
+# Todas las demas lineas se leeran como producciones.
+# Para definir una produccion usar "<nombre> -> <regla1> | <regla2> | ... | <reglaN>"
+# Para definir una regla usar "((<terminal>|<noTerminal>).<espacio>)+"
+# Por ejemplo "<terminal> <noTerminal> <terminal>"
+# Para definir una regla vacia usar "~"
+# Nota, esta implementacion no acepta gramaticas que usen el no terminal para recursividad
+S -> E
+E -> T E'
+E' -> + T E' | ~
+T -> F T'
+T' -> * F T' | ~
+F -> ( E ) | id

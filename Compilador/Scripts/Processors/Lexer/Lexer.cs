@@ -2,7 +2,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Compilador.Graph;
 
-namespace Compilador.Processors
+namespace Compilador.Processors.Lexer
 {
     /// <summary>
     /// The Lexer class is responsible for tokenizing input strings using a list of DFAs (Deterministic Finite Automata) and a list of tokens.

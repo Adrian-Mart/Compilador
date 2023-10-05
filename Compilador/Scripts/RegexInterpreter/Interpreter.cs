@@ -57,7 +57,7 @@ namespace Compilador.RegexInterpreter
             int nodeIndex = -1;
 
             // Parse the expression.
-            string parsedExp = Parser.Parse(exp);
+            string parsedExp = RegexParser.Parse(exp);
 
             // For each character in the parsed expression,
             foreach (char c in parsedExp)
@@ -75,8 +75,8 @@ namespace Compilador.RegexInterpreter
                 else
                 {
                     var transition = c;
-                    if (Parser.Correspondency.ContainsKey(c))
-                        transition = Parser.Correspondency[c];
+                    if (RegexParser.Correspondency.ContainsKey(c))
+                        transition = RegexParser.Correspondency[c];
 
                     values.Push(transition.ToString());
                     if (!alphabet.Contains(transition))

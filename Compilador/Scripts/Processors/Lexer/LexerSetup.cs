@@ -2,7 +2,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Compilador.Graph;
 
-namespace Compilador.Processors
+namespace Compilador.Processors.Lexer
 {
     /// <summary>
     /// Represents the setup for the lexer.
