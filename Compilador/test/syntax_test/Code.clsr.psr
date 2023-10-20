@@ -1,0 +1,8 @@
+->PLUS
+  |-ID
+  └─PLUS
+    |-ID
+    └─FUNCTION
+      └─PLUS
+        |-ID
+        └─ID

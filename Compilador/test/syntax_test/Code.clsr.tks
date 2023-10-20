@@ -1,0 +1,1 @@
+<START:s:> <ID:var_uno> <PLUS:+> <ID:var_dos> <PLUS:+> <FUNCTION:SUMA> <OPEN_PAREN:(> <ID:var_uno> <PLUS:+> <ID:var_dos> <CLOSE_PAREN:)> <NEW_LINE:NEW_LINE> <START:s:> <FUNCTION:SUMA> <OPEN_PAREN:(> <ID:var_uno> <PLUS:+> <ID:var_dos> <CLOSE_PAREN:)> <NEW_LINE:NEW_LINE>

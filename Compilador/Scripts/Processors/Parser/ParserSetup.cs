@@ -1,4 +1,5 @@
 
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Compilador.Processors.Parser
@@ -6,30 +7,48 @@ namespace Compilador.Processors.Parser
     /// <summary>
     /// Stores all the grammar related data of the parser.
     /// </summary>
+    [DataContract, KnownType(typeof(ParserSetup)), KnownType(typeof(Operator))]
     public class ParserSetup
     {
         /// <summary>
         /// The index of the start symbol.
         /// </summary>
+        [DataMember()]
         private int start;
 
         /// <summary>
         /// An index to keep track of the non terminals and terminals.
         /// </summary>
+        [DataMember()]
         private int index = 0;
 
         /// <summary>
         /// A dictionary to store the non terminals and their indexes.
         /// </summary>
+        [DataMember()]
         private Dictionary<string, int> nonTerminals;
         /// <summary>
         /// A dictionary to store the terminals and their indexes.
         /// </summary>
+        [DataMember()]
         private Dictionary<string, int> terminals;
         /// <summary>
         /// A dictionary to store the productions and their nonterminal indexes.
         /// </summary>
+        [DataMember()]
         private Dictionary<int, Production> productions;
+
+        /// <summary>
+        /// The hierarchy terminals.
+        /// </summary>
+        [DataMember()]
+        private int[]? hierarchyTerminals;
+
+        /// <summary>
+        /// The operator terminals and their types.
+        /// </summary>
+        [DataMember()]
+        private Operator[]? operatorTerminals;
 
         /// <summary>
         /// Gets the number of non terminals.
@@ -43,6 +62,14 @@ namespace Compilador.Processors.Parser
         /// Gets the start symbol index.
         /// </summary>
         public int Start { get => start; }
+        /// <summary>
+        /// Gets the hierarchy terminals.
+        /// </summary>
+        public int[]? HierarchyTerminals { get => hierarchyTerminals; }
+        /// <summary>
+        /// Gets the operator terminals and their types.
+        /// </summary>
+        public Operator[]? OperatorTerminals { get => operatorTerminals; }
 
         /// <summary>
         /// Constructs a new parser setup with the given start symbol, non terminals and terminals.
@@ -51,7 +78,8 @@ namespace Compilador.Processors.Parser
         /// <param name="nonTerminals">The non terminals.</param>
         /// <param name="terminals">The terminals.</param>
         /// <exception cref="ArgumentException"></exception>
-        internal ParserSetup(string start, List<string> nonTerminals, List<string> terminals)
+        internal ParserSetup(string start, List<string> nonTerminals,
+            List<string> terminals, List<string>? hierarchy, List<(string, bool)>? operators)
         {
             this.nonTerminals = new Dictionary<string, int>();
             this.terminals = new Dictionary<string, int>();
@@ -64,6 +92,17 @@ namespace Compilador.Processors.Parser
 
             if (!this.nonTerminals.TryGetValue(start, out this.start))
                 throw new ArgumentException("Start symbol not found in production rules.");
+
+            if (hierarchy != null)
+                hierarchyTerminals = hierarchy.Select(GetTerminalIndex).ToArray();
+            if (operators != null)
+            {
+                operatorTerminals = new Operator[operators.Count];
+                for (int i = 0; i < operators.Count; i++)
+                {
+                    operatorTerminals[i] = new Operator(operators[i].Item2, GetTerminalIndex(operators[i].Item1));
+                }
+            }
         }
 
         /// <summary>
@@ -129,6 +168,7 @@ namespace Compilador.Processors.Parser
 
         /// <summary>
         /// Gets the index of the given non terminal or terminal.
+        /// Returns -1 if not found.
         /// </summary>
         /// <param name="v">The name of the non terminal or terminal.</param>
         internal int GetIndexOf(string v)
@@ -252,6 +292,16 @@ namespace Compilador.Processors.Parser
         internal bool isTerminal(int index)
         {
             return terminals.ContainsValue(index);
+        }
+
+        internal string GetTokenOf(int index)
+        {
+            string token = terminals.FirstOrDefault(x => x.Value == index).Key;
+            if (token == null)
+                token = nonTerminals.FirstOrDefault(x => x.Value == index).Key;
+            if (token == null)
+                throw new ArgumentException("Index is either a non-terminal or a terminal.");
+            return token;
         }
     }
 }

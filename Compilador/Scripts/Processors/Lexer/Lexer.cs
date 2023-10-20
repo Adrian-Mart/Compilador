@@ -45,12 +45,14 @@ namespace Compilador.Processors.Lexer
         /// </summary>
         /// <param name="input">The input string to tokenize.</param>
         /// <returns>A list of tokens.</returns>
-        private List<string> Tokenize(string input)
+        public TokenStream Tokenize(string input)
         {
+            List<string> tokenData = new List<string>();
             List<string> tokenStream = new List<string>();
+            Queue<string> strings = new Queue<string>();
             if (setup.UseText)
             {
-                input = ParseStrings(input);
+                input = ParseStrings(input, out strings);
             }
 
             // Clear the input string
@@ -67,7 +69,7 @@ namespace Compilador.Processors.Lexer
                     if (lexeme == "")
                         continue;
                     // Identify the token of the lexeme
-                    var token = IdentifyTokens(lexeme);
+                    var token = IdentifyTokens(lexeme, tokenData, strings);
                     if (token != null && token.Count > 0)
                         tokenStream.AddRange(token);
                     else
@@ -83,11 +85,13 @@ namespace Compilador.Processors.Lexer
 
                 }
 
+                // Add a line break token to the token stream
+                tokenData.Add(setup.LineBreakToken);
                 tokenStream.Add(setup.LineBreakToken);
             }
 
-            // Return the list of tokens.
-            return tokenStream;
+            // Return the token stream
+            return new TokenStream(tokenStream, tokenData);
         }
 
         /// <summary>
@@ -95,47 +99,66 @@ namespace Compilador.Processors.Lexer
         /// </summary>
         /// <param name="input">The input string to tokenize.</param>
         /// <returns>A string of tokens.</returns>
-        public string GetOutputString(string input)
+        public string GetOutputString(object input)
         {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (var token in Tokenize(input))
-            {
-                sb.Append(token);
-                if (token == setup.LineBreakToken)
-                    sb.Append("\n");
-                else
-                    sb.Append(" ");
-            }
-            sb.Remove(sb.Length - 1, 1);
-            return sb.ToString();
+            if(input.GetType() != typeof(string))
+                throw new Exception("Invalid input type for lexer. Expected string, got " + input.GetType().ToString());
+            string inputString = (string)input;
+            return Tokenize(inputString).ToString();
         }
 
         /// <summary>
         /// Identifies the token of a string.
         /// </summary>
         /// <param name="text">Text being indentified.</param>
+        /// <param name="data">List of data.</param>
+        /// <param name="strings">Queue of strings.</param>
         /// <returns>Token of a string and null if there is no match for this text.</returns>
-        private string? IdentifyToken(string text)
+        private string? IdentifyToken(string text, List<string> data, Queue<string> strings)
         {
-            if (text == "╔") return setup.TextDelimiterToken;
+            if (text == "╔")
+            {
+                data.Add(strings.Dequeue());
+                return setup.TextDelimiterToken;
+            }
             foreach (var automata in automatas)
             {
                 if (automata.TestString(text))
+                {
+                    data.Add(text);
                     return tokens[automatas.IndexOf(automata)];
+                }
             }
             return null;
         }
 
-        private List<string> IdentifyTokens(string text)
+        /// <summary>
+        /// Identifies all the posible tokens of a string.
+        /// </summary>
+        /// <param name="text">Text being indentified.</param>
+        /// <param name="data">List of data.</param>
+        /// <param name="strings">Queue of strings.</param>
+        /// <returns>Token of a string and empty list if there
+        /// is no match for this text.</returns>
+        private List<string> IdentifyTokens(string text, List<string> data, Queue<string> strings)
         {
             List<string> tokens = new List<string>();
-            return IdentifyTokens(tokens, text);
+            return IdentifyTokens(tokens, text, data, strings);
         }
 
-        private List<string> IdentifyTokens(List<string> tokens, string text)
+        /// <summary>
+        /// Identifies the tokens of a string. This method is recursive.
+        /// </summary>
+        /// <param name="tokens">List of tokens.</param>
+        /// <param name="text">Text being indentified.</param>
+        /// <param name="data">List of data.</param>
+        /// <param name="strings">Queue of strings.</param>
+        /// <returns>Token of a string and empty list if there
+        /// is no match for this text.</returns>
+        private List<string> IdentifyTokens(List<string> tokens, string text,
+            List<string> data, Queue<string> strings)
         {
-            if(string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return tokens;
 
             StringBuilder mainSb = new StringBuilder();
@@ -143,9 +166,9 @@ namespace Compilador.Processors.Lexer
             mainSb.Append(text);
             for (int i = text.Length - 1; i >= 0; i--)
             {
-                string? token = IdentifyToken(mainSb.ToString());
-                
-                if(token == null)
+                string? token = IdentifyToken(mainSb.ToString(), data, strings);
+
+                if (token == null)
                 {
                     auxSb = string.Concat(mainSb.ToString().Last(), auxSb);
                     mainSb.Remove(i, 1);
@@ -156,12 +179,21 @@ namespace Compilador.Processors.Lexer
                     break;
                 }
             }
-            
-            return IdentifyTokens(tokens, auxSb);
+
+            return IdentifyTokens(tokens, auxSb, data, strings);
         }
 
-        private string ParseStrings(string input)
+        /// <summary>
+        /// Replaces the text delimiter with a special character.
+        /// </summary>
+        /// <param name="input">Input text</param>
+        /// <param name="strings">Queue of strings.</param>
+        /// <returns>A string with the text delimiter replaced
+        /// with a special character.</returns>
+        /// <exception cref="Exception"></exception>
+        private string ParseStrings(string input, out Queue<string> strings)
         {
+            strings = new Queue<string>();
             var tempText = input.Split(setup.TextDelimiter);
             // Check if the text delimiter count is even
             if (tempText.Length % 2 == 0)
@@ -175,7 +207,10 @@ namespace Compilador.Processors.Lexer
             foreach (var item in tempText)
             {
                 if (index % 2 == 1)
+                {
+                    strings.Enqueue($"{setup.TextDelimiter}{item}{setup.TextDelimiter}");
                     sb.Append('╔');
+                }
                 else
                     sb.Append(item);
                 index++;
@@ -236,6 +271,14 @@ namespace Compilador.Processors.Lexer
                 lexer = (Lexer?)obj.ReadObject(writer.BaseStream);
             }
             return lexer;
+        }
+
+        public object GetOutputObject(object input)
+        {
+            if(input.GetType() != typeof(string))
+                throw new Exception("Invalid input type for lexer. Expected string, got " + input.GetType().ToString());
+            string inputString = (string)input;
+            return Tokenize(inputString);
         }
     }
 }

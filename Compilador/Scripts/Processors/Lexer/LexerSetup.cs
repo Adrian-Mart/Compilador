@@ -13,7 +13,8 @@ namespace Compilador.Processors.Lexer
         /// <summary>
         /// The default setup.
         /// </summary>
-        private static LexerSetup defaultSetup = new LexerSetup(' ', '\n', '#', "NEW_LINE", true, '"', "TEXT_DELIMITER");
+        private static LexerSetup defaultSetup =
+            new LexerSetup(' ', '\n', '#', "NEW_LINE", true, '"', "TEXT_DELIMITER");
 
         /// <summary>
         /// The separator character.
@@ -94,8 +95,9 @@ namespace Compilador.Processors.Lexer
         /// <param name="useText">A value indicating whether to use text.</param>
         /// <param name="textDelimiter">The text delimiter character.</param>
         /// <param name="textDelimiterToken">The text delimiter token.</param>
-        public LexerSetup(char separator, char lineBreak, char comment, string lineBreakToken, bool useText,
-            char textDelimiter, string textDelimiterToken)
+        public LexerSetup(char separator, char lineBreak, char comment,
+            string lineBreakToken, bool useText, char textDelimiter,
+            string textDelimiterToken)
         {
             this.separator = separator;
             this.lineBreak = lineBreak;

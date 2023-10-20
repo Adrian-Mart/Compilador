@@ -197,14 +197,17 @@ namespace Compilador.IO
 
         private protected override IProcessor GetProcessorFromFile(string processorPath, string saveToFilePath)
         {
-            Lexer lexer = (Lexer)GetProcessorFromFile(processorPath);
-            lexer.Serialize(saveToFilePath);
-            return lexer;
+            processor = (Lexer)GetProcessorFromFile(processorPath);
+            processor.Serialize(saveToFilePath);
+            return processor;
         }
 
         private protected override IProcessor? GetProcessorFromSerialFile(string processorPath)
         {
-            Lexer? lexer = (Lexer?)Lexer.Deserialize(processorPath);
+            var lexer = (Lexer?)Lexer.Deserialize(processorPath);
+            if (lexer == null)
+                throw new Exception("Invalid serial data.");
+            processor = lexer;
             return lexer;
         }
     }

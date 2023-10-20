@@ -39,7 +39,7 @@ namespace Compilador.IO
         private protected FileIO(string fileExtension, string serialDataPath)
         {
             this.fileExtension = fileExtension;
-            processor = GetProcessorFromSerialFile(serialDataPath)?? throw new Exception("Invalid serial data.");
+            processor = GetProcessorFromSerialFile(serialDataPath) ?? throw new Exception("Invalid serial data.");
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Compilador.IO
         /// </summary>
         /// <param name="filePath">The path of the file to read.</param>
         /// <returns>The content of the file as a string.</returns>
-        private protected string ReadFileContent(string filePath)
+        public string ReadFileContent(string filePath)
         {
             StringBuilder sb = new StringBuilder();
             using (StreamReader reader = new StreamReader(filePath))
@@ -77,7 +77,10 @@ namespace Compilador.IO
                 string? line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.StartsWith('#')) continue;
+                    if (line.StartsWith('#')
+                        || string.IsNullOrEmpty(line)
+                        || string.IsNullOrWhiteSpace(line))
+                        continue;
                     sb.Append(line);
                     sb.Append('\n');
                 }
@@ -87,13 +90,12 @@ namespace Compilador.IO
         }
 
         /// <summary>
-        /// Writes the content of a file to the specified file path.
+        /// Writes the output of the processor to the specified file path.
         /// </summary>
         /// <param name="filePath">The path of the file to write.</param>
-        public virtual void WriteFileContent(string filePath)
+        public virtual void WriteFileContent(object input, string filePath)
         {
-            string text = ReadFileContent(filePath);
-            string processedInput = processor.GetOutputString(text);
+            string processedInput = processor.GetOutputString(input);
             using (StreamWriter writer = new StreamWriter(filePath + fileExtension))
             {
                 writer.Write(processedInput);
@@ -122,6 +124,18 @@ namespace Compilador.IO
         /// <param name="processorPath">Path to the serialized processor data.</param>
         /// <returns> Processor obj from the specified file</returns>
         private protected abstract IProcessor? GetProcessorFromSerialFile(string processorPath);
+
+        /// <summary>
+        /// Gets the output of the processor from the specified input.
+        /// </summary>
+        /// <param name="input">The input to be processed. For Lexer,
+        /// this is a string, for Parser, this is a TokenStream.</param>
+        /// <returns>The output of the processor. For Lexer, this is a TokenStream,
+        /// for Parser, this is a SyntaxTree.</returns>
+        public virtual object GetOutput(object input)
+        {
+            return processor.GetOutputObject(input);
+        }
     }
 
 }

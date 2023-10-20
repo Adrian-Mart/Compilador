@@ -58,6 +58,8 @@ namespace Compilador.IO
             List<string>? productionsLines = new List<string>();
             List<string>? nonTerminals = null;
             List<string>? terminals = null;
+            List<string>? hierarchy = null;
+            List<(string, bool)>? operators = null;
 
             // For each line in the file
             foreach (var line in text.Split('\n'))
@@ -73,12 +75,22 @@ namespace Compilador.IO
                 // If the line contains the non terminals
                 else if (line.StartsWith("& Non terminals: [", StringComparison.OrdinalIgnoreCase))
                 {
-                    nonTerminals = ProcessNonTerminals(line);
+                    nonTerminals = ProcessListFromLine(line, "& Non terminals");
                 }
                 // If the line contains the terminals
                 else if (line.StartsWith("& Terminals: [", StringComparison.OrdinalIgnoreCase))
                 {
-                    terminals = ProcessTerminals(line);
+                    terminals = ProcessListFromLine(line, "& Terminals");
+                }
+                // If the line contains the hierarchy
+                else if (line.StartsWith("& Hierarchy: [", StringComparison.OrdinalIgnoreCase))
+                {
+                    hierarchy = ProcessListFromLine(line, "& Hierarchy");
+                }
+                // If the line contains the operators
+                else if (line.StartsWith("& Operators: [", StringComparison.OrdinalIgnoreCase))
+                {
+                    operators = ProcessOperators(line);
                 }
                 // If the line is a production
                 else
@@ -90,7 +102,7 @@ namespace Compilador.IO
                 throw new Exception("Invalid setup. Please read the documentation carefully. I put a lot of effort into it.");
 
             // Create the setup
-            setup = new ParserSetup(start, nonTerminals, terminals);
+            setup = new ParserSetup(start, nonTerminals, terminals, hierarchy, operators);
 
             // Add the productions to the setup
             foreach (var line in productionsLines)
@@ -115,7 +127,7 @@ namespace Compilador.IO
             // Split the line into the non terminal name and the rules
             string[] data = line.Split("->");
             if (data.Length != 2)
-                throw new Exception("Invalid production rule. Please read the documentation carefully. I put a lot of effort into it.");
+                throw new Exception($"Invalid production rule: {line}. Please read the documentation carefully. I put a lot of effort into it.");
 
             // Remove spaces from the non terminal name
             nonTerminalName = data[0].Replace(" ", "");
@@ -143,45 +155,44 @@ namespace Compilador.IO
         }
 
         /// <summary>
-        /// Processes the non terminals from a line in the file
+        /// Processes the list from a line in the file
         /// </summary>
         /// <param name="line">The line</param>
-        /// <returns>The non terminals as a string list</returns>
-        private List<string> ProcessNonTerminals(string line)
+        /// <param name="start">The start of the line</param>
+        /// <returns>The list as a string list</returns>
+        private List<string> ProcessListFromLine(string line, string start)
         {
-            List<string> nonTerminals = new List<string>();
+            List<string> list = new List<string>();
 
-            var data = line.Replace("& Non terminals: [", "", StringComparison.OrdinalIgnoreCase);
+            var data = line.Replace(start, "", StringComparison.OrdinalIgnoreCase);
+            data = data.Replace(": [", "", StringComparison.OrdinalIgnoreCase);
             data = data.Replace("]", "", StringComparison.OrdinalIgnoreCase);
 
             foreach (var nonTerminal in data.Split(' '))
             {
                 if (string.IsNullOrEmpty(nonTerminal)) continue;
-                nonTerminals.Add(nonTerminal);
+                list.Add(nonTerminal);
             }
 
-            return nonTerminals;
+            return list;
         }
 
-        /// <summary>
-        /// Processes the terminals from a line in the file
-        /// </summary>
-        /// <param name="line">The line</param>
-        /// <returns>The terminals as a string list</returns>
-        private List<string> ProcessTerminals(string line)
+        private List<(string, bool)> ProcessOperators(string line)
         {
-            List<string>? terminals = new List<string>();
+            List<(string, bool)> operators = new List<(string, bool)>();
 
-            var data = line.Replace("& Terminals: [", "", StringComparison.OrdinalIgnoreCase);
+            var data = line.Replace("& Operators: [", "", StringComparison.OrdinalIgnoreCase);
             data = data.Replace("]", "", StringComparison.OrdinalIgnoreCase);
 
-            foreach (var terminal in data.Split(' '))
+            foreach (var op in data.Split(' '))
             {
-                if (string.IsNullOrEmpty(terminal)) continue;
-                terminals.Add(terminal);
+                if (string.IsNullOrEmpty(op)) continue;
+                var opData = op.Split(':');
+                if (opData.Length != 2)
+                    throw new Exception("Invalid operator. Please read the documentation carefully. I put a lot of effort into it.");
+                operators.Add((opData[0], string.Compare(opData[1], "binary_op", StringComparison.OrdinalIgnoreCase) == 0));
             }
-
-            return terminals;
+            return operators;
         }
     }
 }
