@@ -14,18 +14,25 @@ namespace Compilador.Processors.Lexer
         /// The setup for the lexer.
         /// </summary>
         [DataMember()]
-        LexerSetup setup;
+        private LexerSetup setup;
 
         /// <summary>
         /// The list of DFAs to use for tokenization.
         /// </summary>
         [DataMember()]
-        List<ITester> automatas = new List<ITester>();
+        private List<ITester> automatas = new List<ITester>();
+
         /// <summary>
         /// The list of tokens to use for tokenization.
         /// </summary>
         [DataMember()]
-        List<string> tokens = new List<string>();
+        private string[] tokens;
+
+        /// <summary>
+        /// The dictionary of characters to use for tokenization.
+        /// </summary>
+        [DataMember()]
+        private Dictionary<char, int> dictionary = new Dictionary<char, int>();
 
         /// <summary>
         /// Initializes a new instance of the Lexer class with a list of DFAs and a list of tokens.
@@ -33,11 +40,12 @@ namespace Compilador.Processors.Lexer
         /// <param name="automatas">The list of DFAs to use for tokenization.</param>
         /// <param name="tokens">The list of tokens to use for tokenization.</param>
         /// <param name="setup">The setup for the lexer.</param>
-        public Lexer(List<ITester> automatas, List<string> tokens, LexerSetup setup)
+        public Lexer(List<ITester> automatas, List<string> tokens, LexerSetup setup, Dictionary<char, int> dictionary)
         {
             this.automatas = automatas;
-            this.tokens = tokens;
+            this.tokens = tokens.ToArray();
             this.setup = setup;
+            this.dictionary = dictionary;
         }
 
         /// <summary>
@@ -54,7 +62,6 @@ namespace Compilador.Processors.Lexer
             {
                 input = ParseStrings(input, out strings);
             }
-
             // Clear the input string
             input = ClearInput(input);
 
@@ -69,9 +76,15 @@ namespace Compilador.Processors.Lexer
                     if (lexeme == "")
                         continue;
                     // Identify the token of the lexeme
-                    var token = IdentifyTokens(lexeme, tokenData, strings);
-                    if (token != null && token.Count > 0)
-                        tokenStream.AddRange(token);
+                    var token = IdentifyToken(lexeme);
+                    if (token != null)
+                    {
+                        tokenStream.Add(token);
+                        if(token == setup.TextDelimiterToken)
+                            tokenData.Add(strings.Dequeue());
+                        else
+                            tokenData.Add(lexeme);
+                    }
                     else
                     {
                         // If the lexeme is not a token, throw an exception.
@@ -107,80 +120,38 @@ namespace Compilador.Processors.Lexer
             return Tokenize(inputString).ToString();
         }
 
+        private int[] StringToIds(string input)
+        {
+            List<int> ids = new List<int>();
+            foreach (var c in input)
+            {
+                if (dictionary.ContainsKey(c))
+                    ids.Add(dictionary[c]);
+                else
+                    throw new Exception($"Invalid character in char ({c}) of string ({input})");
+            }
+            return ids.ToArray();
+        }
+
         /// <summary>
         /// Identifies the token of a string.
         /// </summary>
         /// <param name="text">Text being indentified.</param>
-        /// <param name="data">List of data.</param>
-        /// <param name="strings">Queue of strings.</param>
         /// <returns>Token of a string and null if there is no match for this text.</returns>
-        private string? IdentifyToken(string text, List<string> data, Queue<string> strings)
+        private string? IdentifyToken(string text)
         {
             if (text == "╔")
             {
-                data.Add(strings.Dequeue());
                 return setup.TextDelimiterToken;
             }
             foreach (var automata in automatas)
             {
-                if (automata.TestString(text))
+                if (automata.TestIds(StringToIds(text)))
                 {
-                    data.Add(text);
                     return tokens[automatas.IndexOf(automata)];
                 }
             }
             return null;
-        }
-
-        /// <summary>
-        /// Identifies all the posible tokens of a string.
-        /// </summary>
-        /// <param name="text">Text being indentified.</param>
-        /// <param name="data">List of data.</param>
-        /// <param name="strings">Queue of strings.</param>
-        /// <returns>Token of a string and empty list if there
-        /// is no match for this text.</returns>
-        private List<string> IdentifyTokens(string text, List<string> data, Queue<string> strings)
-        {
-            List<string> tokens = new List<string>();
-            return IdentifyTokens(tokens, text, data, strings);
-        }
-
-        /// <summary>
-        /// Identifies the tokens of a string. This method is recursive.
-        /// </summary>
-        /// <param name="tokens">List of tokens.</param>
-        /// <param name="text">Text being indentified.</param>
-        /// <param name="data">List of data.</param>
-        /// <param name="strings">Queue of strings.</param>
-        /// <returns>Token of a string and empty list if there
-        /// is no match for this text.</returns>
-        private List<string> IdentifyTokens(List<string> tokens, string text,
-            List<string> data, Queue<string> strings)
-        {
-            if (string.IsNullOrEmpty(text))
-                return tokens;
-
-            StringBuilder mainSb = new StringBuilder();
-            string auxSb = "";
-            mainSb.Append(text);
-            for (int i = text.Length - 1; i >= 0; i--)
-            {
-                string? token = IdentifyToken(mainSb.ToString(), data, strings);
-
-                if (token == null)
-                {
-                    auxSb = string.Concat(mainSb.ToString().Last(), auxSb);
-                    mainSb.Remove(i, 1);
-                }
-                else
-                {
-                    tokens.Add(token);
-                    break;
-                }
-            }
-
-            return IdentifyTokens(tokens, auxSb, data, strings);
         }
 
         /// <summary>

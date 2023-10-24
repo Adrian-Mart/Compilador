@@ -28,25 +28,19 @@ namespace Compilador.Graph
         /// The alphabet of the DFA
         /// </summary>
         [DataMember()]
-        private char[] alphabet;
+        private int[] alphabet;
 
         /// <summary>
         /// DFA Constructor for serialization purposes.
         /// </summary>
-        internal DFA(Dictionary<int, DFAState> states, DFAState startState, char[] alphabet)
+        internal DFA(Dictionary<int, DFAState> states, DFAState startState, int[] alphabet)
         {
             this.states = states;
             this.startState = startState;
             this.alphabet = alphabet;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the DFA class.
-        /// </summary>
-        /// <param name="alphabet">The alphabet of the DFA.</param>
-        /// <param name="nodes">A dictionary that maps node IDs to Node objects.</param>
-        /// <param name="startNodeId">The ID of the start node.</param>
-        internal DFA(char[] alphabet, Dictionary<int, Node> nodes, int startNodeId)
+        
+        internal DFA(int[] alphabet, Dictionary<int, Node> nodes, int startNodeId)
         {
             this.alphabet = alphabet;
             states = new Dictionary<int, DFAState>();
@@ -65,59 +59,34 @@ namespace Compilador.Graph
                 state.AddTransitions(nodes[state.Id], states);
             }
         }
-
-        /// <summary>
-        /// Test whether the string s is accepted by the DFA.
-        /// </summary>
-        /// <param name="s"> String to be tested</param>
-        /// <returns> True if the string is accepted by the DFA, false otherwise. </returns>
-        public bool TestString(string s)
+        
+        public bool TestIds(int[] ids)
         {
-            int errorIndex = 0;
-            if (s == "") return startState.IsFinal;
-            if (!StringInAlphabet(s, out errorIndex))
+            if (ids.Length == 0) return startState.IsFinal;
+            if (!IdsInAlphabet(ids))
             {
-                //Console.WriteLine(string.Format("Undefined char. Error in char {0} of {1}: {2}",
-                //    errorIndex, s, s[errorIndex]));
                 return false;
             }
 
             DFAState? actualState = startState;
-            errorIndex = 0;
-            foreach (var c in s)
+            foreach (var c in ids)
             {
                 if (actualState == null)
                     return false;
                 if (!actualState.TryTransition(c, out actualState))
-                {
-                    //Console.WriteLine(string.Format("Misplaced char. Error in char {0} of {1}: {2}",
-                    //    errorIndex, s, c));
                     return false;
-                }
-                errorIndex++;
             }
-            //if (!actualState.IsFinal)
-            //Console.WriteLine(string.Format("Incomplete expresion. Error in char {0} of {1}: {2}",
-            //    errorIndex - 1, s, s[errorIndex - 1]));
+            if (actualState == null)
+                return false;
             return actualState.IsFinal;
         }
-
-        /// <summary>
-        /// Test whether all the characters in s are contained in the alphabet.
-        /// </summary>
-        /// <param name="s"> String being tested </param>
-        /// <param name="errorIndex"> Index of the first character not contained
-        /// in the alphabet</param>
-        /// <returns>True if all the characters in s are contained in the alphabet,
-        /// in any other case false. </returns>
-        private bool StringInAlphabet(string s, out int errorIndex)
+        
+        private bool IdsInAlphabet(int[] ids)
         {
-            errorIndex = 0;
-            foreach (var c in s)
+            foreach (var id in ids)
             {
-                if (!alphabet.Contains(c))
+                if (!alphabet.Contains(id))
                     return false;
-                errorIndex++;
             }
             return true;
         }

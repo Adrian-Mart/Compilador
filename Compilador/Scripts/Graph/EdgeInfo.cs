@@ -20,9 +20,9 @@ namespace Compilador.Graph
         /// </summary>
         private int end;
         /// <summary>
-        /// The transition character of the edge.
+        /// The transition id of the edge.
         /// </summary>
-        private char transition;
+        private int transition;
 
         /// <summary>
         /// Gets the start node of the edge.
@@ -33,17 +33,17 @@ namespace Compilador.Graph
         /// </summary>
         public int End { get => end; }
         /// <summary>
-        /// Gets the transition character of the edge.
+        /// Gets the transition id of the edge.
         /// </summary>
-        public char Transition { get => transition; }
+        public int Transition { get => transition; }
 
         /// <summary>
-        /// Initializes a new instance of the EdgeInfo class with the specified start and end nodes, and transition character.
+        /// Initializes a new instance of the EdgeInfo class with the specified start and end nodes, and transition id.
         /// </summary>
         /// <param name="start">The start node of the edge.</param>
         /// <param name="end">The end node of the edge.</param>
-        /// <param name="transition">The transition character of the edge.</param>
-        public EdgeInfo(int start, int end, char transition)
+        /// <param name="transition">The transition id of the edge.</param>
+        public EdgeInfo(int start, int end, int transition)
         {
             this.start = start;
             this.end = end;

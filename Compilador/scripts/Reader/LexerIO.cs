@@ -31,6 +31,11 @@ namespace Compilador.IO
         /// </summary>
         private LexerSetup setup = LexerSetup.DefaultSetup;
 
+        /// <summary>
+        /// The dictionary of characters to use for tokenization.
+        /// </summary>
+        private Dictionary<char, int> dictionary = new Dictionary<char, int>();
+
         public LexerIO(string processorPath, string saveToFilePath) : base(".tks", processorPath, saveToFilePath) { }
 
         public LexerIO(string serialDataPath) : base(".tks", serialDataPath) { }
@@ -107,7 +112,7 @@ namespace Compilador.IO
         /// <exception cref="Exception"></exception>
         private void AddAutomatas(string regex, string token)
         {
-            automatas.Add(Interpreter.Interpret(regex));
+            automatas.Add(Interpreter.Interpret(regex, dictionary));
             tokens.Add(token);
 
             if (automatas.Count() != tokens.Count())
@@ -126,7 +131,6 @@ namespace Compilador.IO
         /// </param>
         private void SetAutomatas(string[,] input)
         {
-            float progress = 0;
             Console.WriteLine("Creating automatas...");
             automatas.Clear();
             tokens.Clear();
@@ -134,10 +138,9 @@ namespace Compilador.IO
             {
                 if (input[i, 0] != null && input[i, 1] != null)
                     AddAutomatas(input[i, 0], input[i, 1]);
-                progress = (float)i / input.GetLength(0) * 100;
-                Console.WriteLine(string.Concat("  Progress: ", progress, "%, Regex to DFA: ", input[i, 0], " READY"));
+                float progress = (i + 1.0f) / input.GetLength(0) * 100.0f;
+                Console.WriteLine(string.Concat($"  Progress: {progress}%, Regex to DFA: {input[i, 0]} READY"));
             }
-            Console.WriteLine("  Progress: 100%");
         }
 
         /// <summary>
@@ -163,7 +166,7 @@ namespace Compilador.IO
             SetSetup(firstLine);
 
             // Return processor
-            return new Lexer(automatas, tokens, setup);
+            return new Lexer(automatas, tokens, setup, dictionary);
         }
 
         /// <summary>
