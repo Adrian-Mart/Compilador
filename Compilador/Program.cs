@@ -55,24 +55,24 @@ namespace Compilador
             // {
             //     string basePath = AppDomain.CurrentDomain.BaseDirectory;
             //     Console.WriteLine(basePath);
-            //     basePath = basePath.Replace("\\bin\\Debug\\net7.0", "");
+            //     basePath = basePath.Replace("/bin/Debug/net7.0", "");
 
-            //     LexerIO lexerIO = new LexerIO(basePath + "test\\LexerData.lxr", basePath + "test\\LexerDataOut.xml");
-            //     lexerIO.WriteFileContent(basePath + "test\\Code.clsr");
+            //     LexerIO lexerIO = new LexerIO(basePath + "test/LexerData.lxr", basePath + "test/LexerDataOut.xml");
+            //     lexerIO.WriteFileContent(basePath + "test/Code.clsr");
             // }
 
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
-            basePath = basePath.Replace("\\bin\\Debug\\net7.0", "");
+            basePath = basePath.Replace("/bin/Debug/net7.0", "");
 
-            // basePath + "test\\LexerData.lxr", 
-            LexerIO lexerIO = new LexerIO(basePath + "test\\LexerData.lxr", basePath + "test\\LexerDataOut.xml");
-            lexerIO.WriteFileContent(lexerIO.ReadFileContent(basePath + "test\\Code.clsr"), basePath + "test\\Code.clsr");
-            TokenStream? tokenStream = lexerIO.GetOutput(lexerIO.ReadFileContent(basePath + "test\\Code.clsr")) as TokenStream;
+            // basePath + "test/syntax_test/LexerData.lxr", 
+            LexerIO lexerIO = new LexerIO(basePath + "test/syntax_test/LexerData.lxr", basePath + "test/syntax_test/LexerDataOut.xml");
+            lexerIO.WriteFileContent(lexerIO.ReadFileContent(basePath + "test/syntax_test/Code.clsr"), basePath + "test/syntax_test/Code.clsr");
+            TokenStream? tokenStream = lexerIO.GetOutput(lexerIO.ReadFileContent(basePath + "test/syntax_test/Code.clsr")) as TokenStream;
             if (tokenStream == null)
                 throw new Exception("Output of lexer is not a TokenStream");
 
-            //ParserIO parserIO = new ParserIO(basePath + "test\\ParserData.prs", basePath + "test\\ParserDataOut.xml");
-            //parserIO.WriteFileContent(tokenStream, basePath + "test\\Code.clsr");
+            ParserIO parserIO = new ParserIO(basePath + "test/syntax_test/ParserData.prs", basePath + "test/syntax_test/ParserDataOut.xml");
+            //parserIO.WriteFileContent(tokenStream, basePath + "test/Code.clsr");
         }
     }
 }

@@ -148,7 +148,7 @@ namespace Compilador.IO
                     ruleIndexes[i] = setup.GetIndexOf(ruleIndex[i]);
                 }
 
-                production.AddRule(new Rule(ruleIndexes));
+                production.AddRule(new Rule(ruleIndexes, production));
             }
 
             return production;

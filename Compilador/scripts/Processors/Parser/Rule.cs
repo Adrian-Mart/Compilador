@@ -14,13 +14,19 @@ namespace Compilador.Processors.Parser
         private int[] elements;
 
         /// <summary>
+        /// The production of the rule.
+        /// </summary>
+        private Production production;
+
+        /// <summary>
         /// Creates a new rule with the given elements.
         /// </summary>
         /// <param name="elements">The terminals and/or
         /// no terminals of the rule.</param>
-        internal Rule(int[] elements)
+        internal Rule(int[] elements, Production production)
         {
             this.elements = elements;
+            this.production = production;
         }
 
         /// <summary>
@@ -57,6 +63,7 @@ namespace Compilador.Processors.Parser
         public override string? ToString()
         {
             StringBuilder builder = new StringBuilder();
+            builder.Append(production.NonTerminalId).Append(" -> ");
             foreach (var element in elements)
                 builder.Append(element).Append(" ");
             builder.Remove(builder.Length - 1, 1);

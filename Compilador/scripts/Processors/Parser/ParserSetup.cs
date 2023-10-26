@@ -70,6 +70,21 @@ namespace Compilador.Processors.Parser
         /// Gets the operator terminals and their types.
         /// </summary>
         public Operator[]? OperatorTerminals { get => operatorTerminals; }
+        /// <summary>
+        /// Gets the productions.
+        /// </summary>
+        /// <value>The productions.</value>
+        /// <remarks>The key is the non terminal index and the value is the production.</remarks>
+        internal Dictionary<int, Production> Productions { get => productions; }
+
+        /// <summary>
+        /// The index of the EOF terminal.
+        /// </summary>
+        private const int eof = -1;
+        /// <summary>
+        /// Gets the index of the EOF terminal.
+        /// </summary>
+        public static int EOF { get => eof; }
 
         /// <summary>
         /// Constructs a new parser setup with the given start symbol, non terminals and terminals.
@@ -289,7 +304,7 @@ namespace Compilador.Processors.Parser
         /// </summary>
         /// <param name="index">The index of the symbol to check.</param>
         /// <returns>True if the symbol is a non terminal, false otherwise.</returns>
-        internal bool isTerminal(int index)
+        internal bool IsTerminal(int index)
         {
             return terminals.ContainsValue(index);
         }
@@ -302,6 +317,20 @@ namespace Compilador.Processors.Parser
             if (token == null)
                 throw new ArgumentException("Index is either a non-terminal or a terminal.");
             return token;
+        }
+
+        internal Rule[] GetRules()
+        {
+            List<Rule> rules = new List<Rule>();
+            foreach (var production in productions)
+            {
+                foreach (var rule in production.Value.Rules)
+                {
+                    if(rule != null && !rules.Contains(rule))
+                        rules.Add(rule);
+                }
+            }
+            return rules.ToArray();
         }
     }
 }

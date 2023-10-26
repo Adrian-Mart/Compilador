@@ -1,12 +1,9 @@
-& Start P
-& Non terminals: [P S' S L' E E']
-& Terminals: [PLUS FUNCTION OPEN_PAREN CLOSE_PAREN ID NEW_LINE ~]
-& Hierarchy: [OPEN_PAREN CLOSE_PAREN]
-& Operators: [PLUS:BINARY_OP FUNCTION:UNARY_OP]
+& Start S
+& Non terminals: [S E T]
+& Terminals: [- n ( )]
+#& Hierarchy: [( )]
+#& Operators: [PLUS:BINARY_OP FUNCTION:UNARY_OP]
 
-P -> E
-E -> T E'
-E' -> PLUS T E' | MINUS T E' | ~
-T -> F T'
-T' -> TIMES F T' | DIVIDE F T' | ~
-F -> OPEN_PAREN E CLOSE_PAREN | ID
+S -> E
+E -> E - T | T
+T -> n | ( E )

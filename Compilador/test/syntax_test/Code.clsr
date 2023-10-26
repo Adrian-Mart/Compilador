@@ -1,2 +1,1 @@
-var_uno - var_dos + SUMA(var_uno + var_dos)
-SUMA(- var_uno + var_dos)
+n - ( n - n )
