@@ -70,12 +70,14 @@ namespace Compilador.Processors.Parser
                     {
                         var c = new Configuration(rule, 0);
                         c.AddLookAhead(config.LookAhead[0]);
+                        if(!configurations.Contains(c))
+                            configurations.Enqueue(c);
                         if (!state.Configurations.Contains(c))
                         {
-                            c.RemoveLookAhead(config.LookAhead[0]);
+                            c = new Configuration(rule, 0);
                             c.AddLookAhead(config.NextNext());
+                            configurations.Enqueue(c);
                         }
-                        configurations.Enqueue(c);
                     }
                 state.AddConfiguration(config);
             }
