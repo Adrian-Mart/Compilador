@@ -39,6 +39,7 @@ namespace Compilador.Processors.Parser
         /// Gets the number of elements in the rule.
         /// </summary>
         public int Lenght { get => elements.Length; }
+        internal Production Production { get => production; }
 
         /// <summary>
         /// Gets the index of the given element.
