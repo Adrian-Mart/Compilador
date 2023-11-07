@@ -17,6 +17,13 @@ namespace Compilador.Graph
         /// </summary>
         private int value;
 
+        private string data;
+
+        /// <summary>
+        /// The depth of the node in the graph.
+        /// </summary>
+        private int depth;
+
         /// <summary>
         /// A value indicating whether the node is a leaf.
         /// </summary>
@@ -38,39 +45,55 @@ namespace Compilador.Graph
         public int Value { get => value; }
 
         /// <summary>
+        /// Gets the value of the node.
+        /// </summary>
+        public string Data { get => data; }
+
+        /// <summary>
         /// Gets the list of children of the node.
         /// </summary>
         internal List<SimpleNode> Children { get => children; set => children = value; }
-        public bool IsLeaf { get => isLeaf; set => isLeaf = value; }
-        internal SimpleNode? Parent { get => parent; set => parent = value; }
+
+        /// <summary>
+        /// Gets a value indicating whether the node is a leaf.
+        /// </summary>
+        public bool IsLeaf { get => isLeaf; set => isLeaf = value;}
+
+        /// <summary>
+        /// Gets the parent of the node. If null, the node is the root node.
+        /// </summary>
+        internal SimpleNode? Parent { get => parent; }
+
+        /// <summary>
+        /// Gets the depth of the node in the graph.
+        /// </summary>
+        public int Depth { get => depth; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleNode"/> class with the specified value.
         /// </summary>
         /// <param name="value">The value of the node.</param>
         /// <param name="parent">The parent of the node.</param>
-        internal SimpleNode(int value, SimpleNode? parent)
+        internal SimpleNode(int value, string data, SimpleNode? parent)
         {
             this.value = value;
             this.parent = parent;
+            this.data = data;
             children = new List<SimpleNode>();
+
+            depth = parent == null ? 0 : parent.depth + 1;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SimpleNode"/>
-        /// class with the specified value and adds it as a child of this node.
-        /// </summary>
-        /// <param name="value">The value of the node.</param>
-        internal void AddChild(int value)
+        internal void UpdateDepth()
         {
-            var node = new SimpleNode(value, this);
-            node.isLeaf = true;
-            children.Add(node);
+            depth = parent == null ? 0 : parent.depth + 1;
         }
+
         internal void AddChild(SimpleNode node)
         {
             children.Insert(0, node);
             node.parent = this;
+            node.depth = depth + 1;
         }
 
         /// <summary>
@@ -146,7 +169,7 @@ namespace Compilador.Graph
                 sb.Append("|-");
                 indent += "| ";
             }
-            sb.AppendLine(value.ToString());
+            sb.AppendLine($"<{value} : {data}>");
 
             for (int i = 0; i < Children.Count; i++)
                 sb = Children[i].NodeToString(indent, i == Children.Count - 1, sb);

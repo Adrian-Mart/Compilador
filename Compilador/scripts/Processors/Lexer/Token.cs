@@ -37,7 +37,7 @@ namespace Compilador.Processors.Lexer
 
         public override string? ToString()
         {
-            return $"<{type}:{data}>";
+            return $"{type}";
         }
     }
 }

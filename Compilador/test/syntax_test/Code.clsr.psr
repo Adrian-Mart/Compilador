@@ -1,8 +1,130 @@
-->PLUS
-  |-ID
-  └─PLUS
-    |-ID
-    └─FUNCTION
-      └─PLUS
-        |-ID
-        └─ID
+-><START: >
+  └─<SENTENCES: >
+    |-<SENTENCE: >
+    | └─<DECLARATION: >
+    |   |-<TYPE: >
+    |   | └─<number_type: real>
+    |   |-<id: n>
+    |   |-<=: =>
+    |   └─<VALUE: >
+    |     └─<EXPRESSION: >
+    |       └─<TERM: >
+    |         └─<number: SENTENCES
+    |-<new_line: new_line>
+    └─<SENTENCES: >
+      |-<SENTENCE: >
+      | └─<DECLARATION: >
+      |   |-<TYPE: >
+      |   | └─<number_type: real>
+      |   |-<id: a>
+      |   |-<=: =>
+      |   └─<VALUE: >
+      |     └─<EXPRESSION: >
+      |       └─<TERM: >
+      |         └─<number: SENTENCESSTART
+      |-<new_line: new_line>
+      └─<SENTENCES: >
+        |-<SENTENCE: >
+        | └─<DECLARATION: >
+        |   |-<TYPE: >
+        |   | └─<text: string>
+        |   |-<id: b>
+        |   |-<=: =>
+        |   └─<VALUE: >
+        |     └─<string: "Quack!">
+        |-<new_line: new_line>
+        └─<SENTENCES: >
+          |-<SENTENCE: >
+          | └─<DECLARATION: >
+          |   |-<TYPE: >
+          |   | └─<text: string>
+          |   |-<id: ab>
+          |   |-<=: =>
+          |   └─<VALUE: >
+          |     └─<string: "Quack!">
+          |-<new_line: new_line>
+          └─<SENTENCES: >
+            |-<SENTENCE: >
+            | |-<FLOW_CONTROL: >
+            | | |-<if: if>
+            | | |-<(: (>
+            | | |-<VALUE: >
+            | | | └─<EXPRESSION: >
+            | | |   |-<EXPRESSION: >
+            | | |   | └─<TERM: >
+            | | |   |   └─<id: n>
+            | | |   |-<OPERATOR: >
+            | | |   | └─<==: ==>
+            | | |   └─<TERM: >
+            | | |     └─<id: n>
+            | | └─<): )>
+            | |-<new_line: new_line>
+            | |-<{: {>
+            | |-<new_line: new_line>
+            | |-<SENTENCES: >
+            | | |-<SENTENCE: >
+            | | | └─<ASSIGNMENT: >
+            | | |   |-<id: n>
+            | | |   |-<=: =>
+            | | |   └─<VALUE: >
+            | | |     └─<EXPRESSION: >
+            | | |       |-<EXPRESSION: >
+            | | |       | └─<TERM: >
+            | | |       |   └─<id: n>
+            | | |       |-<OPERATOR: >
+            | | |       | └─<+: +>
+            | | |       └─<TERM: >
+            | | |         └─<id: n>
+            | | └─<new_line: new_line>
+            | └─<}: }>
+            |-<new_line: new_line>
+            └─<SENTENCES: >
+              |-<SENTENCE: >
+              | |-<FLOW_CONTROL: >
+              | | |-<while: while>
+              | | |-<(: (>
+              | | |-<VALUE: >
+              | | | └─<EXPRESSION: >
+              | | |   |-<EXPRESSION: >
+              | | |   | └─<TERM: >
+              | | |   |   └─<id: n>
+              | | |   |-<OPERATOR: >
+              | | |   | └─<<: <>
+              | | |   └─<TERM: >
+              | | |     └─<id: n>
+              | | └─<): )>
+              | |-<new_line: new_line>
+              | |-<{: {>
+              | |-<new_line: new_line>
+              | |-<SENTENCES: >
+              | | |-<SENTENCE: >
+              | | | └─<ASSIGNMENT: >
+              | | |   |-<id: n>
+              | | |   |-<=: =>
+              | | |   └─<VALUE: >
+              | | |     └─<EXPRESSION: >
+              | | |       |-<EXPRESSION: >
+              | | |       | └─<TERM: >
+              | | |       |   └─<id: n>
+              | | |       |-<OPERATOR: >
+              | | |       | └─<+: +>
+              | | |       └─<TERM: >
+              | | |         └─<id: n>
+              | | |-<new_line: new_line>
+              | | └─<SENTENCES: >
+              | |   |-<SENTENCE: >
+              | |   | └─<ASSIGNMENT: >
+              | |   |   |-<id: n>
+              | |   |   |-<=: =>
+              | |   |   └─<VALUE: >
+              | |   |     └─<EXPRESSION: >
+              | |   |       |-<EXPRESSION: >
+              | |   |       | └─<TERM: >
+              | |   |       |   └─<id: n>
+              | |   |       |-<OPERATOR: >
+              | |   |       | └─<-: ->
+              | |   |       └─<TERM: >
+              | |   |         └─<id: n>
+              | |   └─<new_line: new_line>
+              | └─<}: }>
+              └─<new_line: new_line>

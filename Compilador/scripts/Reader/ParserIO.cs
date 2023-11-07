@@ -22,23 +22,27 @@ namespace Compilador.IO
         /// <param name="saveToFilePath">The path to the file to save the serialized data.</param>
         public ParserIO(string processorPath, string saveToFilePath) : base(".psr", processorPath, saveToFilePath) { }
 
-        private protected override IProcessor GetProcessorFromFile(string processorPath)
-        {
-            throw new NotImplementedException();
-        }
-
-        private protected override IProcessor GetProcessorFromFile(string processorPath, string saveToFilePath)
+        private protected override Parser GetProcessorFromFile(string processorPath)
         {
             ParserSetup setup = SetSetup(processorPath);
             Console.WriteLine(setup.ToString());
-            Parser parser = new Parser(setup);
-            // parser.Serialize(saveToFilePath);
-            return parser;
+            return new Parser(setup);
         }
 
-        private protected override IProcessor? GetProcessorFromSerialFile(string processorPath)
+        private protected override Parser GetProcessorFromFile(string processorPath, string saveToFilePath)
         {
-            throw new NotImplementedException();
+            processor = GetProcessorFromFile(processorPath);
+            processor.Serialize(saveToFilePath);
+            return (Parser) processor;
+        }
+
+        private protected override Parser? GetProcessorFromSerialFile(string processorPath)
+        {
+            var parser = (Parser?)Parser.Deserialize(processorPath);
+            if (parser == null)
+                throw new Exception("Invalid parser serial data.");
+            processor = parser;
+            return parser;
         }
 
         /// <summary>
@@ -55,6 +59,7 @@ namespace Compilador.IO
 
             // The start symbol and other data
             string start = "";
+            string newLine = "";
             List<string>? productionsLines = new List<string>();
             List<string>? nonTerminals = null;
             List<string>? terminals = null;
@@ -65,12 +70,20 @@ namespace Compilador.IO
             foreach (var line in text.Split('\n'))
             {
                 // If the line contains the start symbol
-                if (line.StartsWith("& Start", StringComparison.OrdinalIgnoreCase))
+                if (line.StartsWith("& Start: ", StringComparison.OrdinalIgnoreCase))
                 {
                     string[] setupData = line.Split(' ');
                     if (setupData.Length != 3)
                         throw new Exception("Invalid start setup. Already off to a bad start.");
                     start = setupData[2];
+                }
+                // If the line contains the start symbol
+                else if (line.StartsWith("& New line: ", StringComparison.OrdinalIgnoreCase))
+                {
+                    string[] setupData = line.Split(' ');
+                    if (setupData.Length != 4)
+                        throw new Exception("Invalid start setup. Already off to a bad start.");
+                    newLine = setupData[3];
                 }
                 // If the line contains the non terminals
                 else if (line.StartsWith("& Non terminals: [", StringComparison.OrdinalIgnoreCase))
@@ -102,7 +115,7 @@ namespace Compilador.IO
                 throw new Exception("Invalid setup. Please read the documentation carefully. I put a lot of effort into it.");
 
             // Create the setup
-            setup = new ParserSetup(start, nonTerminals, terminals, hierarchy, operators);
+            setup = new ParserSetup(start, nonTerminals, terminals, hierarchy, operators, newLine);
 
             // Add the productions to the setup
             foreach (var line in productionsLines)

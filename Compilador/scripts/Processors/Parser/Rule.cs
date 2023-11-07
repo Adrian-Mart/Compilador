@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Compilador.Processors.Parser
@@ -6,16 +7,19 @@ namespace Compilador.Processors.Parser
     /// <summary>
     /// Represents a single production rule in the parser.
     /// </summary>
+    [DataContract, KnownType(typeof(Production)), KnownType(typeof(Rule))]
     internal class Rule : IEnumerable<int>
     {
         /// <summary>
         /// The terminals and/or no terminals of the rule.
         /// </summary>
+        [DataMember()]
         private int[] elements;
 
         /// <summary>
         /// The production of the rule.
         /// </summary>
+        [DataMember()]
         private Production production;
 
         /// <summary>

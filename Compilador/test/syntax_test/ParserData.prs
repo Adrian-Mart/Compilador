@@ -1,9 +1,16 @@
-& Start S
-& Non terminals: [S E T]
-& Terminals: [- n ( )]
-#& Hierarchy: [( )]
-#& Operators: [PLUS:BINARY_OP FUNCTION:UNARY_OP]
+& Start: START
+& New line: new_line
+& Non terminals: [START SENTENCES SENTENCE DECLARATION ASSIGNMENT FLOW_CONTROL EXPRESSION OPERATOR TERM VALUE TYPE]
+& Terminals: [new_line number_type text string id = print if ( ) { } while + - / * == < > != and or number]
 
-S -> E
-E -> E - T | T
-T -> n | ( E )
+START -> SENTENCES
+SENTENCES -> SENTENCE new_line SENTENCES | SENTENCE new_line
+SENTENCE -> DECLARATION | print string | FLOW_CONTROL new_line { new_line SENTENCES } | ASSIGNMENT
+DECLARATION -> TYPE id = VALUE
+ASSIGNMENT -> id = VALUE
+FLOW_CONTROL -> if ( VALUE ) | while ( VALUE )
+EXPRESSION -> EXPRESSION OPERATOR TERM | TERM
+OPERATOR -> + | - | / | * | == | < | > | != | and | or
+TERM -> ( EXPRESSION ) | id | number
+VALUE -> id | number | string | EXPRESSION
+TYPE -> number_type | text

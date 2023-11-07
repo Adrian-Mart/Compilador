@@ -1,1 +1,15 @@
-n - ( n - n )
+real n = 1
+real a = 1.0
+string b = "Quack!"
+string ab = "Quack!"
+
+if ( n == n ) 
+{
+    n = n + n
+}
+
+while ( n < n )
+{
+    n = n + n
+    n = n - n
+}

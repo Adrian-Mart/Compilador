@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Compilador.Processors.Parser
@@ -5,19 +6,23 @@ namespace Compilador.Processors.Parser
     /// <summary>
     /// Represents production for multiple rules of a Non Terminal in the parser.
     /// </summary>
+    [DataContract, KnownType(typeof(Production)), KnownType(typeof(Rule))]
     internal class Production
     {
         /// <summary>
         /// The id of the non terminal.
         /// </summary>
+        [DataMember()]
         private int nonTerminalId;
         /// <summary>
         /// An index to keep track of the rules adding process.
         /// </summary>
+        [DataMember()]
         private int index = 0;
         /// <summary>
         /// The rules of the non terminal.
         /// </summary>
+        [DataMember()]
         private Rule[] rules;
         /// <summary>
         /// Gets the rules of the non terminal.

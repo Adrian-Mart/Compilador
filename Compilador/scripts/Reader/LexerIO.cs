@@ -131,7 +131,7 @@ namespace Compilador.IO
         /// </param>
         private void SetAutomatas(string[,] input)
         {
-            Console.WriteLine("Creating automatas...");
+            // Console.WriteLine("Creating automatas...");
             automatas.Clear();
             tokens.Clear();
             for (int i = 0; i < input.GetLength(0); i++)
@@ -139,8 +139,9 @@ namespace Compilador.IO
                 if (input[i, 0] != null && input[i, 1] != null)
                     AddAutomatas(input[i, 0], input[i, 1]);
                 float progress = (i + 1.0f) / input.GetLength(0) * 100.0f;
-                Console.WriteLine(string.Concat($"  Progress: {progress}%, Regex to DFA: {input[i, 0]} READY"));
+                // Console.WriteLine(string.Concat($"  Progress: {progress}%, Regex to DFA: {input[i, 0]} READY"));
             }
+            Console.WriteLine("Automatas created.");
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace Compilador.IO
         /// <returns>
         /// A processor (<seealso cref="Lexer"/>) from the specified file path.
         /// </returns>
-        private protected override IProcessor GetProcessorFromFile(string processorPath)
+        private protected override Lexer GetProcessorFromFile(string processorPath)
         {
             string? firstLine;
 
@@ -198,18 +199,18 @@ namespace Compilador.IO
             }
         }
 
-        private protected override IProcessor GetProcessorFromFile(string processorPath, string saveToFilePath)
+        private protected override Lexer GetProcessorFromFile(string processorPath, string saveToFilePath)
         {
-            processor = (Lexer)GetProcessorFromFile(processorPath);
+            processor = GetProcessorFromFile(processorPath);
             processor.Serialize(saveToFilePath);
-            return processor;
+            return (Lexer) processor;
         }
 
-        private protected override IProcessor? GetProcessorFromSerialFile(string processorPath)
+        private protected override Lexer? GetProcessorFromSerialFile(string processorPath)
         {
             var lexer = (Lexer?)Lexer.Deserialize(processorPath);
             if (lexer == null)
-                throw new Exception("Invalid serial data.");
+                throw new Exception("Invalid lexer serial data.");
             processor = lexer;
             return lexer;
         }

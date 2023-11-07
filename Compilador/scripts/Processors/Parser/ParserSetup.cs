@@ -7,7 +7,7 @@ namespace Compilador.Processors.Parser
     /// <summary>
     /// Stores all the grammar related data of the parser.
     /// </summary>
-    [DataContract, KnownType(typeof(ParserSetup)), KnownType(typeof(Operator))]
+    [DataContract, KnownType(typeof(ParserSetup)), KnownType(typeof(Operator)), KnownType(typeof(Production)), KnownType(typeof(Rule))]
     public class ParserSetup
     {
         /// <summary>
@@ -27,16 +27,24 @@ namespace Compilador.Processors.Parser
         /// </summary>
         [DataMember()]
         private Dictionary<string, int> nonTerminals;
+
         /// <summary>
         /// A dictionary to store the terminals and their indexes.
         /// </summary>
         [DataMember()]
         private Dictionary<string, int> terminals;
+
         /// <summary>
         /// A dictionary to store the productions and their nonterminal indexes.
         /// </summary>
         [DataMember()]
         private Dictionary<int, Production> productions;
+
+        /// <summary>
+        /// The rules of the grammar.
+        /// </summary>
+        [DataMember()]
+        private Dictionary<Rule, int> rules;
 
         /// <summary>
         /// The hierarchy terminals.
@@ -49,6 +57,10 @@ namespace Compilador.Processors.Parser
         /// </summary>
         [DataMember()]
         private Operator[]? operatorTerminals;
+
+        
+        [DataMember()]
+        private int newLineIndex;
 
         /// <summary>
         /// Gets the number of non terminals.
@@ -85,6 +97,14 @@ namespace Compilador.Processors.Parser
         /// Gets the index of the EOF terminal.
         /// </summary>
         public static int EOF { get => eof; }
+        /// <summary>
+        /// Gets the dictionary of rules.
+        /// </summary>
+        internal Dictionary<Rule, int> Rules { get => rules; }
+        /// <summary>
+        /// Gets the index of the new line terminal.
+        /// </summary>
+        public int NewLineIndex { get => newLineIndex;  }
 
         /// <summary>
         /// Constructs a new parser setup with the given start symbol, non terminals and terminals.
@@ -94,11 +114,12 @@ namespace Compilador.Processors.Parser
         /// <param name="terminals">The terminals.</param>
         /// <exception cref="ArgumentException"></exception>
         internal ParserSetup(string start, List<string> nonTerminals,
-            List<string> terminals, List<string>? hierarchy, List<(string, bool)>? operators)
+            List<string> terminals, List<string>? hierarchy, List<(string, bool)>? operators, string newLine)
         {
             this.nonTerminals = new Dictionary<string, int>();
             this.terminals = new Dictionary<string, int>();
             productions = new Dictionary<int, Production>();
+            rules = new Dictionary<Rule, int>();
 
             foreach (var nonTerminal in nonTerminals)
                 AddNonTerminal(nonTerminal);
@@ -107,6 +128,8 @@ namespace Compilador.Processors.Parser
 
             if (!this.nonTerminals.TryGetValue(start, out this.start))
                 throw new ArgumentException("Start symbol not found in production rules.");
+            if (!this.terminals.TryGetValue(newLine, out newLineIndex))
+                throw new ArgumentException("New line symbol not found in terminals.");
 
             if (hierarchy != null)
                 hierarchyTerminals = hierarchy.Select(GetTerminalIndex).ToArray();
@@ -155,6 +178,12 @@ namespace Compilador.Processors.Parser
             if (id == -1)
                 throw new ArgumentException("Non-terminal not found in production rules.");
             productions.Add(id, production);
+
+            foreach (var rule in production.Rules)
+            {
+                if (!rules.ContainsKey(rule))
+                    rules.Add(rule, rules.Count);
+            }
         }
 
         /// <summary>
@@ -236,7 +265,9 @@ namespace Compilador.Processors.Parser
             builder.Append("Productions: ").Append("\n");
             foreach (var production in productions)
                 builder.Append("\t").Append(production.Key).Append(": ").Append(production.Value.ToString()).Append("\n");
-
+             builder.Append("Rules: ").Append("\n");
+            foreach (var rule in rules)
+                builder.Append("\t").Append(rule.Value).Append(") : ").Append(rule.Key.ToString()).Append("\n");
             return builder.ToString();
         }
 
