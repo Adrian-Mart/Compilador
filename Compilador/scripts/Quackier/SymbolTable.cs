@@ -5,15 +5,29 @@ namespace Compilador.Quackier;
 /// </summary>
 public class SymbolTable
 {
+    /// <summary>
+    /// The scopes stack. Each scope is a dictionary of symbols.
+    /// </summary>
     Stack<Dictionary<int, Symbol>> scopes;
+    /// <summary>
+    /// The current scope.
+    /// </summary>
     Dictionary<int, Symbol> symbols => scopes.Peek();
 
+    /// <summary>
+    /// Creates a new SymbolTable.
+    /// </summary>
     public SymbolTable()
     {
         scopes = new Stack<Dictionary<int, Symbol>>();
         scopes.Push(new Dictionary<int, Symbol>());
     }
 
+    /// <summary>
+    /// Binds a symbol to the current scope.
+    /// </summary>
+    /// <param name="hashCode">The hash code of the symbol.</param>
+    /// <param name="symbol">The symbol to be bound.</param>
     public void Bind(int hashCode, Symbol symbol)
     {
         if(symbols.ContainsKey(hashCode))
@@ -22,6 +36,11 @@ public class SymbolTable
             symbols.Add(hashCode, symbol);
     }
 
+    /// <summary>
+    /// Looks up a symbol in the current scope.
+    /// </summary>
+    /// <param name="hashCode">The hash code of the symbol.</param>
+    /// <returns>The symbol if it exists, null otherwise.</returns>
     public Symbol? Lookup(int hashCode)
     {
         if (symbols.ContainsKey(hashCode))

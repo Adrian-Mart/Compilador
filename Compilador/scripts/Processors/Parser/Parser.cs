@@ -188,13 +188,12 @@ namespace Compilador.Processors.Parser
                 Action action = table[state][symbol];
 
 
-                // #if DEBUG
-                // // Print the parse stack
-                // Console.WriteLine("Stack     : " + string.Join(" ", stack.Reverse().ToArray()));
-                // // Print the parse current symbol and action
-                // Console.WriteLine($"Symbols[{index}]: {symbol}");
-                // Console.WriteLine($"Action    : {action}");
-                // #endif
+
+                // Print the parse stack
+                Console.WriteLine("Stack     : " + string.Join(" ", stack.Reverse().ToArray()));
+                // Print the parse current symbol and action
+                Console.WriteLine($"Symbols[{index}]: {symbol}");
+                Console.WriteLine($"Action    : {action}\n");
 
 
                 switch (action.Type)
