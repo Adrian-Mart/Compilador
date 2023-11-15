@@ -12,9 +12,16 @@ namespace Compilador.Processors
         /// <summary>
         /// Gets the output string from the input string.
         /// </summary>
-        /// <param name="input">Input text.</param>
-        /// <returns></returns>
-        public string GetOutputString(string input);
+        /// <param name="input">Input object.</param>
+        /// <returns>Output string.</returns>
+        public string GetOutputString(object input);
+
+        /// <summary>
+        /// Gets the output object from the input object.
+        /// </summary>
+        /// <param name="input">Input object.</param>
+        /// <returns>Output object.</returns>
+        public object GetOutputObject(object input);
 
         /// <summary>
         /// Serializes the processor to a file.

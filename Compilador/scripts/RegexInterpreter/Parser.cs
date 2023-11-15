@@ -11,7 +11,7 @@ namespace Compilador.RegexInterpreter
     /// <summary>
     /// Class used for parsing the regular expresion to a reverse polish notation like.
     /// </summary>
-    internal static class Parser
+    internal static class RegexParser
     {
         /// <summary>
         /// Stack used for storing the oparators during parsing.

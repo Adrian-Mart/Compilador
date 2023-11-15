@@ -1,0 +1,22 @@
+# Para seleccionar el nombre de la no terminal inicial usar "& Start <nombre>"
+& Start S
+# Para definir las no terminales usar "& Non terminals [<nombre1> <nombre2> ... <nombreN>]"
+& Non terminals: [S E E' F]
+# Para definir los terminales usar "& Terminals: [<nombre1> <nombre2> ... <nombreN>]"
+& Terminals: [+ Fun ( ) id ~]
+# Para definir que un elemento es de tipo jerarquico (sirve para marcar jerarquia),
+# usar "& Hierarchy: [<nombre1> <nombre2> ... <nombreN>]"
+& Hierarchy: [( )]
+# Todas las demas lineas se leeran como producciones.
+# Para definir una produccion usar "<nombre> -> <regla1> | <regla2> | ... | <reglaN>"
+# Para definir una regla usar "((<terminal>|<noTerminal>).<espacio>)+"
+# Por ejemplo "<terminal> <noTerminal> <terminal>"
+# Para definir una regla vacia usar "~"
+# Nota, esta implementacion no acepta gramaticas que usen el no terminal para recursividad
+# Para definir el tipo de operador usar "& Operators" "<terminal>:<tipo>" donde tipo puede ser BINARY_OP o UNARY_OP,
+# esto se refleja en el arbol de sintaxis abstracta.
+& Operators: [+:BINARY_OP Fun:UNARY_OP]
+S -> E
+E -> F E'
+E' -> + F E' | ~
+F -> ( E ) | id | Fun ( E )

@@ -12,21 +12,21 @@ namespace Compilador.Graph
         /// The transition that the test accepts.
         /// </summary>
         [DataMember()]
-        private char transition;
+        private int transition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitaryDFA"/> class.
         /// </summary>
         /// <param name="transition">The transition that the test accepts.</param>
-        internal UnitaryDFA(char transition)
+        internal UnitaryDFA(int transition)
         { 
             this.transition = transition;
         }
 
-        public bool TestString(string s){
-            if(s.Length != 1)
+        public bool TestIds(int[] ids){
+            if(ids.Length != 1)
                 return false;
-            return s[0] == transition;
+            return ids[0] == transition;
         }
     }
 }

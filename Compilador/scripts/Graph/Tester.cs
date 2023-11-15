@@ -7,10 +7,11 @@ namespace Compilador.Graph
     public interface ITester
     {
         /// <summary>
-        /// Tests a string.
+        /// Tests the given array of IDs. Returns true if the ids
+        /// are accepted by the automaton.
         /// </summary>
-        /// <param name="s">The string to test.</param>
-        /// <returns>True if the string passes the test, false otherwise.</returns>
-        public bool TestString(string s);
+        /// <param name="ids">The array of IDs to test.</param>
+        /// <returns>True if the ids are accepted by the automaton.</returns>
+        public bool TestIds(int[] ids);
     }
 }

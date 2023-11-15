@@ -29,7 +29,7 @@ namespace Compilador.Graph
         /// The transitions of the state.
         /// </summary>
         [DataMember()]
-        private Dictionary<char, DFAState> transitions;
+        private Dictionary<int, DFAState> transitions;
             
         /// <summary>
         /// Gets the ID of the state.
@@ -48,7 +48,7 @@ namespace Compilador.Graph
         internal DFAState(Node node)
         {
             id = node.Id;
-            transitions = new Dictionary<char, DFAState>();
+            transitions = new Dictionary<int, DFAState>();
             isFinal = node.IsFinal;
         }
 
@@ -70,14 +70,8 @@ namespace Compilador.Graph
                 }
             }
         }
-                
-        /// <summary>
-        /// Tries to transition to the next state based on the given transition character.
-        /// </summary>
-        /// <param name="transition">The transition character.</param>
-        /// <param name="nextState">The next state if the transition is successful, otherwise null.</param>
-        /// <returns>True if the transition is successful, otherwise false.</returns>
-        internal bool TryTransition(char transition, out DFAState? nextState)
+        
+        internal bool TryTransition(int transition, out DFAState? nextState)
         {
             if (transitions.ContainsKey(transition))
             {

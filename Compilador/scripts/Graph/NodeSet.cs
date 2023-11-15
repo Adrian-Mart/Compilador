@@ -164,7 +164,7 @@ namespace Compilador.Graph
         /// <param name="q">The Q set.</param>
         /// <param name="alphabet">The alphabet of the language defined by the regex.</param>
         /// <returns>The edge information for the set.</returns>
-        internal EdgeInfo[] CalculateEdgeInfo(in List<NodeSet> q, char[] alphabet)
+        internal EdgeInfo[] CalculateEdgeInfo(in List<NodeSet> q, int[] alphabet)
         {
             int index = q.IndexOf(this);
             List<EdgeInfo> info = new List<EdgeInfo>();

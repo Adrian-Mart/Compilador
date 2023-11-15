@@ -13,11 +13,12 @@ namespace Compilador.Graph
         /// <summary>
         /// The alphabet of the automata.
         /// </summary>
-        private char[] alphabet;
+        private int[] alphabet;
         /// <summary>
         /// The final nodes of the automata.
         /// </summary>
         private int[] finalNodes;
+        private int epsilonId = -1;
         /// <summary>
         /// The optimized automata.
         /// </summary>
@@ -34,9 +35,10 @@ namespace Compilador.Graph
         /// <param name="endId">End node ID.</param>
         /// <param name="edges">Edges of the graph.</param>
         /// <param name="alphabet">The alphabet of the automata.</param>
-        public TempDFA(int startId, int endId, EdgeInfo[] edges, char[] alphabet) : base(startId, endId, edges)
+        public TempDFA(int startId, int endId, EdgeInfo[] edges, int[] alphabet, int epsilonId) : base(startId, endId, edges)
         {
             this.alphabet = alphabet;
+            this.epsilonId = epsilonId;
             finalNodes = new int[] { endId };
             ClearEpsilonTransitions();
             ClearDeadEndStates();
@@ -112,7 +114,7 @@ namespace Compilador.Graph
                 temp = stack.Pop();
                 foreach (var edge in temp.Edges)
                 {
-                    if (edge.Transition == '~' && !nodes.Contains(edge.End))
+                    if (edge.Transition == epsilonId && !nodes.Contains(edge.End))
                     {
                         nodes.Add(edge.End);
                         stack.Push(edge.End);
@@ -131,7 +133,7 @@ namespace Compilador.Graph
         /// <param name="n">The node to calculate the transitions.</param>
         /// <param name="symbol">The symbol to calculate the transitions.</param>
         /// <returns>An array with the ids of the nodes from witch the node n can arrive.</returns>
-        private int[] GetTransitions(Dictionary<int, Node[]> eClousures, Node n, char symbol)
+        private int[] GetTransitions(Dictionary<int, Node[]> eClousures, Node n, int symbol)
         {
             List<int> nodes = new List<int>();
 
@@ -159,7 +161,7 @@ namespace Compilador.Graph
         /// <param name="n">The node to calculate the transitions.</param>
         /// <param name="symbol">The symbol to calculate the transitions.</param>
         /// <returns>An array with the ids of the nodes from witch the node n can arrive.</returns>
-        private int[] GetTransitions(Node n, char symbol)
+        private int[] GetTransitions(Node n, int symbol)
         {
             List<int> nodes = new List<int>();
 

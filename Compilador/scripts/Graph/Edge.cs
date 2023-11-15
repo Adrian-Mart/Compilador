@@ -22,16 +22,16 @@ namespace Compilador.Graph
         /// </summary>
         private Node end;
         /// <summary>
-        /// Transition character from the start node 
+        /// Transition id from the start node 
         /// to the end node
         /// </summary>
-        private char transition;
+        private int transition;
 
         /// <summary>
-        /// Transition character from the start node 
+        /// Transition id from the start node 
         /// to the end node
         /// </summary>
-        internal char Transition { get => transition; }
+        internal int Transition { get => transition; }
         /// <summary>
         /// Node end which the edge goes
         /// </summary>
@@ -47,9 +47,9 @@ namespace Compilador.Graph
         /// <param name="start"> Node start from which the edge
         /// starts </param>
         /// <param name="end"> Node to which the edge goes </param>
-        /// <param name="transition"> Transition character from the 
+        /// <param name="transition"> Transition id from the 
         /// "From" node "To" the end node </param>
-        internal Edge(Node start, Node end, char transition)
+        internal Edge(Node start, Node end, int transition)
         {
             this.start = start;
             this.end = end;

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Compilador.Graph;
 using Compilador.Processors;
+using Compilador.Processors.Lexer;
 using Compilador.RegexInterpreter;
 
 namespace Compilador.IO
@@ -29,6 +30,11 @@ namespace Compilador.IO
         /// The setup of the lexer.
         /// </summary>
         private LexerSetup setup = LexerSetup.DefaultSetup;
+
+        /// <summary>
+        /// The dictionary of characters to use for tokenization.
+        /// </summary>
+        private Dictionary<char, int> dictionary = new Dictionary<char, int>();
 
         public LexerIO(string processorPath, string saveToFilePath) : base(".tks", processorPath, saveToFilePath) { }
 
@@ -106,7 +112,7 @@ namespace Compilador.IO
         /// <exception cref="Exception"></exception>
         private void AddAutomatas(string regex, string token)
         {
-            automatas.Add(Interpreter.Interpret(regex));
+            automatas.Add(Interpreter.Interpret(regex, dictionary));
             tokens.Add(token);
 
             if (automatas.Count() != tokens.Count())
@@ -125,18 +131,17 @@ namespace Compilador.IO
         /// </param>
         private void SetAutomatas(string[,] input)
         {
-            float progress = 0;
-            Console.WriteLine("Creating automatas...");
+            // Console.WriteLine("Creating automatas...");
             automatas.Clear();
             tokens.Clear();
             for (int i = 0; i < input.GetLength(0); i++)
             {
                 if (input[i, 0] != null && input[i, 1] != null)
                     AddAutomatas(input[i, 0], input[i, 1]);
-                progress = (float)i / input.GetLength(0) * 100;
-                Console.WriteLine(string.Concat("  Progress: ", progress, "%, Regex to DFA: ", input[i, 0], " READY"));
+                float progress = (i + 1.0f) / input.GetLength(0) * 100.0f;
+                // Console.WriteLine(string.Concat($"  Progress: {progress}%, Regex to DFA: {input[i, 0]} READY"));
             }
-            Console.WriteLine("  Progress: 100%");
+            Console.WriteLine("Automatas created.");
         }
 
         /// <summary>
@@ -148,7 +153,7 @@ namespace Compilador.IO
         /// <returns>
         /// A processor (<seealso cref="Lexer"/>) from the specified file path.
         /// </returns>
-        private protected override IProcessor GetProcessorFromFile(string processorPath)
+        private protected override Lexer GetProcessorFromFile(string processorPath)
         {
             string? firstLine;
 
@@ -162,7 +167,7 @@ namespace Compilador.IO
             SetSetup(firstLine);
 
             // Return processor
-            return new Lexer(automatas, tokens, setup);
+            return new Lexer(automatas, tokens, setup, dictionary);
         }
 
         /// <summary>
@@ -194,16 +199,19 @@ namespace Compilador.IO
             }
         }
 
-        private protected override IProcessor GetProcessorFromFile(string processorPath, string saveToFilePath)
+        private protected override Lexer GetProcessorFromFile(string processorPath, string saveToFilePath)
         {
-            Lexer lexer = (Lexer)GetProcessorFromFile(processorPath);
-            lexer.Serialize(saveToFilePath);
-            return lexer;
+            processor = GetProcessorFromFile(processorPath);
+            processor.Serialize(saveToFilePath);
+            return (Lexer) processor;
         }
 
-        private protected override IProcessor? GetProcessorFromSerialFile(string processorPath)
+        private protected override Lexer? GetProcessorFromSerialFile(string processorPath)
         {
-            Lexer? lexer = (Lexer?)Lexer.Deserialize(processorPath);
+            var lexer = (Lexer?)Lexer.Deserialize(processorPath);
+            if (lexer == null)
+                throw new Exception("Invalid lexer serial data.");
+            processor = lexer;
             return lexer;
         }
     }
