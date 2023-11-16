@@ -2,7 +2,7 @@
 # Nombre del proyecto
 Compilador para el lenguaje de programación Quacker
 ## Nota
-Este es un proyecto académico, no se recomienda su uso en producción. El proyecto se encuentra en desarrollo, por lo que la última versión estable solamente contiene el analizador léxico. No se garantiza el funcionamiento de este proyecto.
+Este es un proyecto académico, no se recomienda su uso en producción. El proyecto se encuentra en desarrollo, por lo que la última versión estable solamente contiene el analizador léxico y el analizador sintáctico. No se garantiza el funcionamiento de este proyecto.
 ## Requisitos
 - Se requiere de .NET 6.0 o superior para compilar y ejecutar el proyecto
 - IDE o editor de texto de elección
