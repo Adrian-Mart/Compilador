@@ -1,0 +1,13 @@
+-><START: >
+  └─<SENTENCES: >
+    |-<SENTENCE: >
+    | └─<DECLARATION: >
+    |   |-<TYPE: >
+    |   | └─<text: string_quack>
+    |   |-<id: quack_START
+    |   |-<=: =>
+    |   └─<VALUE: >
+    |     └─<EXPRESSION: >
+    |       └─<TERM: >
+    |         └─<number: SENTENCESSTART
+    └─<new_line: new_line>

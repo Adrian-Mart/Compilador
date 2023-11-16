@@ -1,0 +1,4 @@
+quack_while ( quack_0 < 0 )
+(*)>
+    quack_1 = quack_1 + quack_1
+    quack_1 = quack_1 + quack_1

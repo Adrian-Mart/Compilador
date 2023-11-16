@@ -1,0 +1,15 @@
+real_quack quack_0 = -1
+real_quack quack_1 = 1.0
+string_quack quack_2 = "Quack!"
+string_quack quack_3 = "Quackier!"
+
+quack_if ( quack_0 == quack_1 ) 
+(*)>
+    quack_1 = quack_1 + quack_1
+<(*)
+
+quack_while ( quack_0 < 0 )
+(*)>
+    quack_1 = quack_1 + quack_1
+    quack_1 = quack_1 + quack_1
+<(*)

@@ -1,0 +1,23 @@
+-><START: >
+  └─<SENTENCES: >
+    |-<SENTENCE: >
+    | └─<DECLARATION: >
+    |   |-<TYPE: >
+    |   | └─<number_type: real_quack>
+    |   |-<id: quack_SENTENCES
+    |   |-<=: =>
+    |   └─<VALUE: >
+    |     └─<EXPRESSION: >
+    |       └─<TERM: >
+    |         └─<number: SENTENCESSTART
+    |-<new_line: new_line>
+    └─<SENTENCES: >
+      |-<SENTENCE: >
+      | └─<DECLARATION: >
+      |   |-<TYPE: >
+      |   | └─<text: string_quack>
+      |   |-<id: quack_SENTENCE
+      |   |-<=: =>
+      |   └─<VALUE: >
+      |     └─<string: "Quack!">
+      └─<new_line: new_line>

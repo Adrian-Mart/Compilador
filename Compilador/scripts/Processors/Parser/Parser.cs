@@ -42,7 +42,7 @@ namespace Compilador.Processors.Parser
             this.setup = setup;
             // Generate the LALR table
             table = ParseTableLALR.GenerateTable(setup, out endOfFileIndex);
-            //Console.WriteLine(ParseTableLALR.TableToString(table, endOfFileIndex));
+            Console.WriteLine(ParseTableLALR.TableToString(table, endOfFileIndex));
             Console.WriteLine("Parser table created");
         }
 
@@ -177,7 +177,7 @@ namespace Compilador.Processors.Parser
                 int symbol;
 
                 // If the index is the end of the file
-                if (index == symbols.Count)
+                if (index >= symbols.Count)
                     // Set the symbol to the end of file symbol
                     symbol = endOfFileIndex;
                 else
@@ -200,10 +200,11 @@ namespace Compilador.Processors.Parser
                 {
                     // If the action is an error
                     case ActionType.Error:
-                        int line;
+                        int line = -1;
+                        string symbolText = "EOF";
                         string text = GetLine(values, index, symbols, out line);
                         // Throw an exception
-                        throw new Exception($"Error at symbol {values[index]}, line[{line}]: {text}");
+                        throw new Exception($"Error in {symbolText}, line[{line}]: {text}");
                     // If the action is a shift
                     case ActionType.Shift:
                         // Push the symbol and the action value to the stack
@@ -254,7 +255,12 @@ namespace Compilador.Processors.Parser
         /// <param name="line">The line of the error.</param>
         private string GetLine(List<string> values, int index, List<int> input, out int line)
         {
-            line = 0;
+            line = -1;
+            if (index >= Math.Min(input.Count, values.Count) || index < 0)
+                return string.Join(" ", values.GetRange(values.Count - 10, 10)).Replace(setup.GetTokenOf(setup.NewLineIndex), "\n");
+            else
+                line = 0;
+
             var lines = input.Select((x, i) => new { Index = i, Value = x })
                 .Where(x => x.Value == setup.NewLineIndex)
                 .Select(x => x.Index)
@@ -269,8 +275,11 @@ namespace Compilador.Processors.Parser
                 line++;
             }
 
-            return string.Join(" ",
-                values.GetRange(lines[line] + 1, lines[line + 1] - lines[line] - 1));
+            if (line < 0 || line >= lines.Count - 1 || lines[line + 1] - lines[line] - 1 < 0 || lines[line] + 1 < 0)
+                return string.Join(" ", values.GetRange(Math.Max(values.Count - 10, 0), Math.Min(10, values.Count)));
+            else
+                return string.Join(" ",
+                    values.GetRange(lines[line] + 1, lines[line + 1] - lines[line] - 1));
         }
     }
 }

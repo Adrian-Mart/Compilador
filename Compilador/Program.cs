@@ -150,9 +150,58 @@ namespace Compilador
           TypeChecker typeChecker = new TypeChecker(parseData.Value.Item1, parseData.Value.Item2);
           typeChecker.CheckTypes();
         }
-        else if(demoIndex != -1)
+        else if (demoIndex != -1)
         {
-          
+          string basePath = AppDomain.CurrentDomain.BaseDirectory;
+          basePath = basePath.Replace("/bin/Debug/net7.0", "");
+          LexerIO lexerIO = new LexerIO(basePath + "test/syntax_test/LexerDataOut.xml");
+          // Wait for the user to press a key
+          Console.WriteLine("\nLexer ready: Press any key to continue...");
+          Console.ReadKey();
+          ParserIO parserIO = new ParserIO(basePath + "test/syntax_test/ParserDataOut.xml");
+          // Wait for the user to press a key
+          Console.WriteLine("\nParser ready: Press any key to continue...");
+          Console.ReadKey();
+          // For each file in the demo folder
+          foreach (string filePath in Directory.GetFiles(basePath + "test/demo_code/"))
+          {
+            if (filePath.EndsWith(".qckr"))
+            {
+              try
+              {
+                // If the file is a .clsr file
+
+                // Read the file
+                string fileContent = lexerIO.ReadFileContent(filePath);
+                // Print the file content
+                Console.WriteLine("File: " + Path.GetFileName(filePath));
+                // Wait for the user to press a key
+                Console.WriteLine("Press any key to continue...\n");
+                Console.ReadKey();
+                Console.WriteLine(fileContent);
+                // Wait for the user to press a key
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+                // Get the token stream
+                TokenStream? tokenStream = lexerIO.GetOutput(fileContent) as TokenStream;
+                if (tokenStream == null)
+                  throw new Exception("Error in lexer, is not a TokenStream");
+                // Write the file
+                parserIO.WriteFileContent(tokenStream, filePath);
+                
+              }
+              catch (Exception e)
+              {
+                Console.WriteLine(e.Message);
+              }
+              finally
+              {
+                // Wait for the user to press a key
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+              }
+            }
+          }
         }
         else
         {
