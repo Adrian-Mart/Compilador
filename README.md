@@ -1,5 +1,4 @@
 # Compilador de Quackier
-# Nombre del proyecto
 Compilador para el lenguaje de programación Quacker
 ## Nota
 Este es un proyecto académico, no se recomienda su uso en producción. El proyecto se encuentra en desarrollo, por lo que la última versión estable solamente contiene el analizador léxico y el analizador sintáctico. No se garantiza el funcionamiento de este proyecto.
