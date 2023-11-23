@@ -5,7 +5,7 @@ using Compilador.Processors.Parser;
 namespace Compilador.Calculator;
 public static class Compiler
 {
-    public static string Compile(string code, Lexer lexer, Parser parser)
+    public static string Compile(string code, Lexer lexer, Parser parser, string filePath)
     {
         // Preprocess the code.
         code = Preprocesor.Preprocess(code);
@@ -21,9 +21,18 @@ public static class Compiler
         AbstractTree tree = new AbstractTree(parserOutput.Value.Item1, parserOutput.Value.Item2);
         // Generate the code.
         CodeGenerator generator = new CodeGenerator();
-        string generatedCode = generator.GenerateCode(tree);
+        string generatedCode = generator.GenerateCode(tree, code);
         // Return the generated code.
-        Console.WriteLine(generatedCode);
+        //Console.WriteLine(generatedCode);
+        WriteFileContent(generatedCode, filePath);
         return generatedCode;
+    }
+
+    private static void WriteFileContent(string input, string filePath)
+    {
+        using (StreamWriter writer = new StreamWriter(filePath + ".asm"))
+        {
+            writer.Write(input);
+        }
     }
 }

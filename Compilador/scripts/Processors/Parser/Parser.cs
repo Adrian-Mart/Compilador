@@ -42,8 +42,8 @@ namespace Compilador.Processors.Parser
             this.setup = setup;
             // Generate the LALR table
             table = ParseTableLALR.GenerateTable(setup, out endOfFileIndex);
-            Console.WriteLine(ParseTableLALR.TableToString(table, endOfFileIndex));
-            Console.WriteLine("Parser table created");
+            //Console.WriteLine(ParseTableLALR.TableToString(table, endOfFileIndex));
+            //Console.WriteLine("Parser table created");
         }
 
         #region Processor
@@ -190,10 +190,10 @@ namespace Compilador.Processors.Parser
 
 
                 // Print the parse stack
-                Console.WriteLine("Stack     : " + string.Join(" ", stack.Reverse().ToArray()));
-                // Print the parse current symbol and action
-                Console.WriteLine($"Symbols[{index}]: {symbol}");
-                Console.WriteLine($"Action    : {action}\n");
+                // Console.WriteLine("Stack     : " + string.Join(" ", stack.Reverse().ToArray()));
+                // // Print the parse current symbol and action
+                // Console.WriteLine($"Symbols[{index}]: {symbol}");
+                // Console.WriteLine($"Action    : {action}\n");
 
 
                 switch (action.Type)
@@ -276,7 +276,7 @@ namespace Compilador.Processors.Parser
             }
 
             if (line < 0 || line >= lines.Count - 1 || lines[line + 1] - lines[line] - 1 < 0 || lines[line] + 1 < 0)
-                return string.Join(" ", values.GetRange(Math.Max(values.Count - 10, 0), Math.Min(10, values.Count)));
+                return string.Join(" ", values.GetRange(Math.Max(values.Count - 10, 0), Math.Min(10, values.Count))).Replace(setup.GetTokenOf(setup.NewLineIndex), "\n");
             else
                 return string.Join(" ",
                     values.GetRange(lines[line] + 1, lines[line + 1] - lines[line] - 1));
