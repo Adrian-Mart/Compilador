@@ -1,0 +1,34 @@
+-><START: >
+  └─<SENTENCE: >
+    |-<EXPRESSION: >
+    | └─<ADD: >
+    |   |-<EXPRESSION: >
+    |   | └─<ADD: >
+    |   |   |-<EXPRESSION: >
+    |   |   | └─<TERM: >
+    |   |   |   |-<(: (>
+    |   |   |   |-<EXPRESSION: >
+    |   |   |   | └─<DIV: >
+    |   |   |   |   |-<EXPRESSION: >
+    |   |   |   |   | └─<TERM: >
+    |   |   |   |   |   └─<number: SENTENCE
+    |   |   |   |   |-</: />
+    |   |   |   |   └─<TERM: >
+    |   |   |   |     └─<number: STARTDIV
+    |   |   |   └─<): )>
+    |   |   |-<+: +>
+    |   |   └─<TERM: >
+    |   |     └─<number: number
+    |   |-<+: +>
+    |   └─<TERM: >
+    |     |-<(: (>
+    |     |-<EXPRESSION: >
+    |     | └─<MUL: >
+    |     |   |-<EXPRESSION: >
+    |     |   | └─<TERM: >
+    |     |   |   └─<number: DIV
+    |     |   |-<*: *>
+    |     |   └─<TERM: >
+    |     |     └─<number: EXPRESSION
+    |     └─<): )>
+    └─<new_line: new_line>

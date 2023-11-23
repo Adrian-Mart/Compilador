@@ -1,0 +1,13 @@
+& Start: START
+& New line: new_line
+& Non terminals: [START SENTENCE EXPRESSION ADD SUB DIV MUL TERM]
+& Terminals: [new_line number ( ) + - / *]
+
+START -> SENTENCE
+SENTENCE -> EXPRESSION new_line
+EXPRESSION -> ADD | SUB | DIV | MUL | TERM
+ADD -> EXPRESSION + TERM
+SUB -> EXPRESSION - TERM
+DIV -> EXPRESSION / TERM
+MUL -> EXPRESSION * TERM
+TERM -> ( EXPRESSION ) | number

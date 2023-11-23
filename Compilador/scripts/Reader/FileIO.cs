@@ -20,6 +20,8 @@ namespace Compilador.IO
         /// </summary>
         private protected IProcessor processor;
 
+        public IProcessor Processor { get => processor; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FileIO"/> class.
         /// </summary>
