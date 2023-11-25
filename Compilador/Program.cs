@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Compilador.Calculator;
 using Compilador.Graph;
 using Compilador.IO;
@@ -86,131 +87,133 @@ namespace Compilador
       var dsIndex = Array.IndexOf(args, "-debugSerial");
       var demoIndex = Array.IndexOf(args, "-demo");
 
-      try
+      // try
+      // {
+      if (slIndex != -1 && spIndex != -1 && iIndex != -1)
       {
-        if (slIndex != -1 && spIndex != -1 && iIndex != -1)
-        {
-          LexerIO lexerIO = new LexerIO(GetPath(args[slIndex + 1]));
-          TokenStream? tokenStream = lexerIO.GetOutput(lexerIO.ReadFileContent(GetPath(args[iIndex + 1]))) as TokenStream;
-          if (tokenStream == null)
-            throw new Exception("Error in lexer, is not a TokenStream");
-          ParserIO parserIO = new ParserIO(GetPath(args[spIndex + 1]));
-          parserIO.WriteFileContent(tokenStream, GetPath(args[iIndex + 1]));
-        }
-        else if (dlIndex != -1 && sloIndex != -1 && dpIndex != -1 && spoIndex != -1 && iIndex == -1)
-        {
-          LexerIO lexerIO = new LexerIO(GetPath(args[dlIndex + 1]), GetPath(args[sloIndex + 1]));
-          ParserIO parserIO = new ParserIO(GetPath(args[dpIndex + 1]), GetPath(args[spoIndex + 1]));
-        }
-        else if (dlIndex != -1 && sloIndex != -1 && dpIndex != -1 && spoIndex != -1 && iIndex != -1)
-        {
-          LexerIO lexerIO = new LexerIO(GetPath(args[dlIndex + 1]), GetPath(args[sloIndex + 1]));
-          TokenStream? tokenStream = lexerIO.GetOutput(lexerIO.ReadFileContent(GetPath(args[iIndex + 1]))) as TokenStream;
-          if (tokenStream == null)
-            throw new Exception("Error in lexer, is not a TokenStream");
-          ParserIO parserIO = new ParserIO(GetPath(args[dpIndex + 1]), GetPath(args[spoIndex + 1]));
-          parserIO.WriteFileContent(tokenStream, GetPath(args[iIndex + 1]));
-        }
-        else if (args.Length == 0 || dIndex != -1)
-        {
-          string basePath = AppDomain.CurrentDomain.BaseDirectory;
-          basePath = basePath.Replace("/bin/Debug/net7.0", "");
-          LexerIO lexerIO = new LexerIO(basePath + "test/simple_calculator/LexerDataOut.xml");
-          ParserIO parserIO = new ParserIO(basePath + "test/simple_calculator/ParserDataOut.xml");
+        LexerIO lexerIO = new LexerIO(GetPath(args[slIndex + 1]));
+        TokenStream? tokenStream = lexerIO.GetOutput(lexerIO.ReadFileContent(GetPath(args[iIndex + 1]))) as TokenStream;
+        if (tokenStream == null)
+          throw new Exception("Error in lexer, is not a TokenStream");
+        ParserIO parserIO = new ParserIO(GetPath(args[spIndex + 1]));
+        parserIO.WriteFileContent(tokenStream, GetPath(args[iIndex + 1]));
+      }
+      else if (dlIndex != -1 && sloIndex != -1 && dpIndex != -1 && spoIndex != -1 && iIndex == -1)
+      {
+        LexerIO lexerIO = new LexerIO(GetPath(args[dlIndex + 1]), GetPath(args[sloIndex + 1]));
+        ParserIO parserIO = new ParserIO(GetPath(args[dpIndex + 1]), GetPath(args[spoIndex + 1]));
+      }
+      else if (dlIndex != -1 && sloIndex != -1 && dpIndex != -1 && spoIndex != -1 && iIndex != -1)
+      {
+        LexerIO lexerIO = new LexerIO(GetPath(args[dlIndex + 1]), GetPath(args[sloIndex + 1]));
+        TokenStream? tokenStream = lexerIO.GetOutput(lexerIO.ReadFileContent(GetPath(args[iIndex + 1]))) as TokenStream;
+        if (tokenStream == null)
+          throw new Exception("Error in lexer, is not a TokenStream");
+        ParserIO parserIO = new ParserIO(GetPath(args[dpIndex + 1]), GetPath(args[spoIndex + 1]));
+        parserIO.WriteFileContent(tokenStream, GetPath(args[iIndex + 1]));
+      }
+      else if (args.Length == 0 || dIndex != -1)
+      {
+        string basePath = AppDomain.CurrentDomain.BaseDirectory;
+        basePath = basePath.Replace("\\bin\\Debug\\net7.0", "");
+        LexerIO lexerIO = new LexerIO(basePath + "test\\syntax_test\\LexerDataOut.xml");
+        ParserIO parserIO = new ParserIO(basePath + "test\\syntax_test\\ParserData.prs", basePath + "test\\syntax_test\\ParserDataOut.xml");
 
-          while (true)
-          {
-            Console.Write("Enter an expression: ");
-            string? expression = Console.ReadLine();
-            if (expression == null || expression == "")
-              break;
+        // while (true)
+        // {
+        //   Console.Write("Enter an expression: ");
+        //   string? expression = Console.ReadLine();
+        //   if (expression == null || expression == "")
+        //     break;
 
-            Compiler.Compile(expression, (Lexer)lexerIO.Processor, (Parser)parserIO.Processor, basePath + "test/simple_calculator/operation");
-            Execute($"nasm -f elf32 test/simple_calculator/operation.asm -o test/simple_calculator/operation.o", basePath);
-            Execute($"gcc -m32 test/simple_calculator/operation.o -o test/simple_calculator/operation -no-pie", basePath);
-            Console.WriteLine(Execute("./operation", $"{basePath}test/simple_calculator/"));
-          }
-        }
-        else if (dsIndex != -1)
+        //   Compiler.Compile(expression, (Lexer)lexerIO.Processor, (Parser)parserIO.Processor, basePath + "test\\simple_calculator\\operation");
+        //   Execute($"nasm -f elf32 test\\simple_calculator\\operation.asm -o test\\simple_calculator\\operation.o", basePath);
+        //   Execute($"gcc -m32 test\\simple_calculator\\operation.o -o test\\simple_calculator\\operation -no-pie", basePath);
+        //   Console.WriteLine(Execute(".\\operation", $"{basePath}test\\simple_calculator\\"));
+        // }
+
+        Quackier.Compiler.Compile(ReadFileContent(basePath + "test\\syntax_test\\Code.clsr"), (Lexer)lexerIO.Processor, (Parser)parserIO.Processor, basePath + "test\\syntax_test\\Code");
+      }
+      else if (dsIndex != -1)
+      {
+        string basePath = AppDomain.CurrentDomain.BaseDirectory;
+        basePath = basePath.Replace("\\bin\\Debug\\net7.0", "");
+        LexerIO lexerIO = new LexerIO(basePath + "test\\syntax_test\\LexerDataOut.xml");
+        lexerIO.WriteFileContent(lexerIO.ReadFileContent(basePath + "test\\syntax_test\\Code.clsr"), basePath + "test\\syntax_test\\Code.clsr");
+        TokenStream? tokenStream = lexerIO.GetOutput(lexerIO.ReadFileContent(basePath + "test\\syntax_test\\Code.clsr")) as TokenStream;
+        if (tokenStream == null)
+          throw new Exception("Error in lexer, is not a TokenStream");
+        ParserIO parserIO = new ParserIO(basePath + "test\\syntax_test\\ParserDataOut.xml");
+        parserIO.WriteFileContent(tokenStream, basePath + "test\\syntax_test\\Code.clsr");
+        Console.WriteLine("Correct syntax!");
+        (Tree, ParserSetup)? parseData = parserIO.GetOutput(parserIO.ReadFileContent(basePath + "test\\syntax_test\\Code.clsr")) as (Tree, ParserSetup)?;
+        if (parseData == null)
+          throw new Exception("Error in parser, is not a (Tree, ParserSetup)");
+        TypeChecker typeChecker = new TypeChecker(parseData.Value.Item1, parseData.Value.Item2);
+        typeChecker.CheckTypes();
+      }
+      else if (demoIndex != -1)
+      {
+        string basePath = AppDomain.CurrentDomain.BaseDirectory;
+        basePath = basePath.Replace("\\bin\\Debug\\net7.0", "");
+        LexerIO lexerIO = new LexerIO(basePath + "test\\syntax_test\\LexerDataOut.xml");
+        // Wait for the user to press a key
+        Console.WriteLine("\nLexer ready: Press any key to continue...");
+        Console.ReadKey();
+        ParserIO parserIO = new ParserIO(basePath + "test\\syntax_test\\ParserDataOut.xml");
+        // Wait for the user to press a key
+        Console.WriteLine("\nParser ready: Press any key to continue...");
+        Console.ReadKey();
+        // For each file in the demo folder
+        foreach (string filePath in Directory.GetFiles(basePath + "test\\demo_code\\"))
         {
-          string basePath = AppDomain.CurrentDomain.BaseDirectory;
-          basePath = basePath.Replace("/bin/Debug/net7.0", "");
-          LexerIO lexerIO = new LexerIO(basePath + "test/syntax_test/LexerDataOut.xml");
-          lexerIO.WriteFileContent(lexerIO.ReadFileContent(basePath + "test/syntax_test/Code.clsr"), basePath + "test/syntax_test/Code.clsr");
-          TokenStream? tokenStream = lexerIO.GetOutput(lexerIO.ReadFileContent(basePath + "test/syntax_test/Code.clsr")) as TokenStream;
-          if (tokenStream == null)
-            throw new Exception("Error in lexer, is not a TokenStream");
-          ParserIO parserIO = new ParserIO(basePath + "test/syntax_test/ParserDataOut.xml");
-          parserIO.WriteFileContent(tokenStream, basePath + "test/syntax_test/Code.clsr");
-          Console.WriteLine("Correct syntax!");
-          (Tree, ParserSetup)? parseData = parserIO.GetOutput(parserIO.ReadFileContent(basePath + "test/syntax_test/Code.clsr")) as (Tree, ParserSetup)?;
-          if (parseData == null)
-            throw new Exception("Error in parser, is not a (Tree, ParserSetup)");
-          TypeChecker typeChecker = new TypeChecker(parseData.Value.Item1, parseData.Value.Item2);
-          typeChecker.CheckTypes();
-        }
-        else if (demoIndex != -1)
-        {
-          string basePath = AppDomain.CurrentDomain.BaseDirectory;
-          basePath = basePath.Replace("/bin/Debug/net7.0", "");
-          LexerIO lexerIO = new LexerIO(basePath + "test/syntax_test/LexerDataOut.xml");
-          // Wait for the user to press a key
-          Console.WriteLine("\nLexer ready: Press any key to continue...");
-          Console.ReadKey();
-          ParserIO parserIO = new ParserIO(basePath + "test/syntax_test/ParserDataOut.xml");
-          // Wait for the user to press a key
-          Console.WriteLine("\nParser ready: Press any key to continue...");
-          Console.ReadKey();
-          // For each file in the demo folder
-          foreach (string filePath in Directory.GetFiles(basePath + "test/demo_code/"))
+          if (filePath.EndsWith(".qckr"))
           {
-            if (filePath.EndsWith(".qckr"))
+            try
             {
-              try
-              {
-                // If the file is a .clsr file
+              // If the file is a .clsr file
 
-                // Read the file
-                string fileContent = lexerIO.ReadFileContent(filePath);
-                // Print the file content
-                Console.WriteLine("File: " + Path.GetFileName(filePath));
-                // Wait for the user to press a key
-                Console.WriteLine("Press any key to continue...\n");
-                Console.ReadKey();
-                Console.WriteLine(fileContent);
-                // Wait for the user to press a key
-                Console.WriteLine("\nPress any key to continue...");
-                Console.ReadKey();
-                // Get the token stream
-                TokenStream? tokenStream = lexerIO.GetOutput(fileContent) as TokenStream;
-                if (tokenStream == null)
-                  throw new Exception("Error in lexer, is not a TokenStream");
-                // Write the file
-                parserIO.WriteFileContent(tokenStream, filePath);
+              // Read the file
+              string fileContent = lexerIO.ReadFileContent(filePath);
+              // Print the file content
+              Console.WriteLine("File: " + Path.GetFileName(filePath));
+              // Wait for the user to press a key
+              Console.WriteLine("Press any key to continue...\n");
+              Console.ReadKey();
+              Console.WriteLine(fileContent);
+              // Wait for the user to press a key
+              Console.WriteLine("\nPress any key to continue...");
+              Console.ReadKey();
+              // Get the token stream
+              TokenStream? tokenStream = lexerIO.GetOutput(fileContent) as TokenStream;
+              if (tokenStream == null)
+                throw new Exception("Error in lexer, is not a TokenStream");
+              // Write the file
+              parserIO.WriteFileContent(tokenStream, filePath);
 
-              }
-              catch (Exception e)
-              {
-                Console.WriteLine(e.Message);
-              }
-              finally
-              {
-                // Wait for the user to press a key
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadKey();
-              }
+            }
+            catch (Exception e)
+            {
+              Console.WriteLine(e.Message);
+            }
+            finally
+            {
+              // Wait for the user to press a key
+              Console.WriteLine("Press any key to continue...");
+              Console.ReadKey();
             }
           }
         }
-        else
-        {
-          Console.WriteLine("Invalid arguments. Use -what? for help.");
-        }
       }
-      catch (Exception e)
+      else
       {
-        Console.WriteLine(e.Message);
+        Console.WriteLine("Invalid arguments. Use -what? for help.");
       }
+      // }
+      // catch (Exception e)
+      // {
+      //   Console.WriteLine(e.Message);
+      // }
     }
 
     private static string GetPath(string path)
@@ -224,7 +227,7 @@ namespace Compilador
     private static string Execute(string command, string workingDirectory)
     {
       Process process = new Process();
-      process.StartInfo.FileName = "/bin/bash";
+      process.StartInfo.FileName = "\\bin\\bash";
       process.StartInfo.Arguments = $"-c \"{command}\"";
       process.StartInfo.WorkingDirectory = workingDirectory;
       process.StartInfo.RedirectStandardOutput = true;
@@ -241,6 +244,22 @@ namespace Compilador
         throw new Exception(error);
 
       return output;
+    }
+
+    public static string ReadFileContent(string filePath)
+    {
+      StringBuilder sb = new StringBuilder();
+      using (StreamReader reader = new StreamReader(filePath))
+      {
+        string? line;
+        while ((line = reader.ReadLine()) != null)
+        {
+          sb.Append(line);
+          sb.Append('\n');
+        }
+        sb.Remove(sb.Length - 1, 1);
+      }
+      return sb.ToString();
     }
   }
 }

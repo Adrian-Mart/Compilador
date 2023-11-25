@@ -47,7 +47,7 @@ namespace Compilador.Graph
         /// <summary>
         /// Gets the value of the node.
         /// </summary>
-        public string Data { get => data; }
+        public string Data { get => data; set => data = value;}
 
         /// <summary>
         /// Gets the list of children of the node.
@@ -62,7 +62,7 @@ namespace Compilador.Graph
         /// <summary>
         /// Gets the parent of the node. If null, the node is the root node.
         /// </summary>
-        internal SimpleNode? Parent { get => parent; }
+        internal SimpleNode? Parent { get => parent; set => parent = value;}
 
         /// <summary>
         /// Gets the depth of the node in the graph.
@@ -128,6 +128,15 @@ namespace Compilador.Graph
         public override string? ToString()
         {
             return NodeToString("", true, new StringBuilder()).ToString();
+        }
+
+        public void ReplaceChild(SimpleNode old, List<SimpleNode> newChildren)
+        {
+            int index = children.IndexOf(old);
+            children.RemoveAt(index);
+            children.InsertRange(index, newChildren);
+            foreach (var child in newChildren)
+                child.parent = this;
         }
 
         public void ReplaceChild(SimpleNode oldChild, SimpleNode newChild)

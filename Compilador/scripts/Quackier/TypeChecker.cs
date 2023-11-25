@@ -77,7 +77,7 @@ public class TypeChecker
         {
             if (node.Value == symbolIndex[DECLARATION])
             {
-                var type = node.Children[0].Children[0].Value == symbolIndex[REAL] ?
+                var type = node.Children[0].Value == symbolIndex[REAL] ?
                     SymbolType.Real: SymbolType.String;
                 var id = node.Children[1].Data.GetHashCode();
 

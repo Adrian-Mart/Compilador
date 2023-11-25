@@ -1,15 +1,17 @@
 real_quack quack_0 = -1
-real_quack quack_1 = 1.0
+real_quack quack_1 = 1
 string_quack quack_2 = "Quack!"
-string_quack quack_3 = "Quackier!"
+string_quack quack_3 = "Valor de quack_0:"
 
-quack_if ( quack_0 == quack_1 ) 
+quack_0 = quack_0 + 2
+quack_if ( quack_0 == quack_4 ) 
 (*)>
-    quack_1 = quack_1 + quack_1
-<(*)
-
-quack_while ( quack_0 < 0 )
-(*)>
-    quack_1 = quack_1 + quack_1
-    quack_1 = quack_1 + quack_1
+    quack_it quack_2
+    quack_0 = -2
+    quack_while ( quack_0 < 0 )
+    (*)>
+        quack_0 = quack_0 + 0.5
+        quack_it quack_3
+        quack_it quack_0
+    <(*)
 <(*)
