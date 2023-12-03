@@ -1,1 +1,9 @@
-number_type id = number new_line number_type id = number new_line text id = string new_line text id = string new_line if ( id == id ) new_line { new_line id = id + id new_line } new_line while ( id < number ) new_line { new_line id = id + id new_line id = id + id new_line } new_line
+number_type id = number new_line
+number_type id = number new_line
+text id = string new_line
+text id = string new_line 
+if ( id == id ) new_line 
+{ new_line 
+id = id + id new_line 
+} new_line 
+while ( id < number ) new_line { new_line id = id + id new_line id = id + id new_line } new_line

@@ -1,0 +1,133 @@
+-><START: >
+  └─<SENTENCES: >
+    |-<SENTENCE: >
+    | └─<DECLARATION: >
+    |   |-<number_type: real_quack>
+    |   |-<id: quack_START
+    |   |-<=: =>
+    |   └─<number: -SENTENCES
+    |-<new_line: new_line>
+    └─<SENTENCES: >
+      |-<SENTENCE: >
+      | └─<DECLARATION: >
+      |   |-<number_type: real_quack>
+      |   |-<id: quack_SENTENCES
+      |   |-<=: =>
+      |   └─<number: SENTENCES
+      |-<new_line: new_line>
+      └─<SENTENCES: >
+        |-<SENTENCE: >
+        | └─<DECLARATION: >
+        |   |-<text: string_quack>
+        |   |-<id: quack_SENTENCE
+        |   |-<=: =>
+        |   └─<string: "Quack!">
+        |-<new_line: new_line>
+        └─<SENTENCES: >
+          |-<SENTENCE: >
+          | └─<DECLARATION: >
+          |   |-<text: string_quack>
+          |   |-<id: quack_PRINT
+          |   |-<=: =>
+          |   └─<string: "Valor de quack_START">
+          |-<new_line: new_line>
+          └─<SENTENCES: >
+            |-<SENTENCE: >
+            | └─<ASSIGNMENT: >
+            |   |-<id: quack_START
+            |   |-<=: =>
+            |   └─<VALUE: >
+            |     └─<EXPRESSION: >
+            |       |-<EXPRESSION: >
+            |       | └─<TERM: >
+            |       |   └─<id: quack_START
+            |       |-<OPERATOR: >
+            |       | └─<+: +>
+            |       └─<TERM: >
+            |         └─<number: SENTENCE
+            |-<new_line: new_line>
+            └─<SENTENCES: >
+              |-<SENTENCE: >
+              | └─<FLOW: >
+              |   |-<FLOW_CONTROL: >
+              |   | |-<if: quack_if>
+              |   | |-<(: (>
+              |   | |-<VALUE: >
+              |   | | └─<EXPRESSION: >
+              |   | |   |-<EXPRESSION: >
+              |   | |   | └─<TERM: >
+              |   | |   |   └─<id: quack_START
+              |   | |   |-<OPERATOR: >
+              |   | |   | └─<==: ==>
+              |   | |   └─<TERM: >
+              |   | |     └─<id: quack_SENTENCES
+              |   | └─<): )>
+              |   |-<new_line: new_line>
+              |   |-<{: (*)>>
+              |   |-<new_line: new_line>
+              |   |-<SENTENCES: >
+              |   | |-<SENTENCE: >
+              |   | | └─<PRINT: >
+              |   | |   |-<print: quack_it>
+              |   | |   └─<id: quack_SENTENCE
+              |   | |-<new_line: new_line>
+              |   | └─<SENTENCES: >
+              |   |   |-<SENTENCE: >
+              |   |   | └─<ASSIGNMENT: >
+              |   |   |   |-<id: quack_START
+              |   |   |   |-<=: =>
+              |   |   |   └─<VALUE: >
+              |   |   |     └─<EXPRESSION: >
+              |   |   |       └─<TERM: >
+              |   |   |         └─<number: -SENTENCE
+              |   |   |-<new_line: new_line>
+              |   |   └─<SENTENCES: >
+              |   |     |-<SENTENCE: >
+              |   |     | └─<FLOW: >
+              |   |     |   |-<FLOW_CONTROL: >
+              |   |     |   | |-<while: quack_while>
+              |   |     |   | |-<(: (>
+              |   |     |   | |-<VALUE: >
+              |   |     |   | | └─<EXPRESSION: >
+              |   |     |   | |   |-<EXPRESSION: >
+              |   |     |   | |   | └─<TERM: >
+              |   |     |   | |   |   └─<id: quack_START
+              |   |     |   | |   |-<OPERATOR: >
+              |   |     |   | |   | └─<<: <>
+              |   |     |   | |   └─<TERM: >
+              |   |     |   | |     └─<number: START
+              |   |     |   | └─<): )>
+              |   |     |   |-<new_line: new_line>
+              |   |     |   |-<{: (*)>>
+              |   |     |   |-<new_line: new_line>
+              |   |     |   |-<SENTENCES: >
+              |   |     |   | |-<SENTENCE: >
+              |   |     |   | | └─<ASSIGNMENT: >
+              |   |     |   | |   |-<id: quack_START
+              |   |     |   | |   |-<=: =>
+              |   |     |   | |   └─<VALUE: >
+              |   |     |   | |     └─<EXPRESSION: >
+              |   |     |   | |       |-<EXPRESSION: >
+              |   |     |   | |       | └─<TERM: >
+              |   |     |   | |       |   └─<id: quack_START
+              |   |     |   | |       |-<OPERATOR: >
+              |   |     |   | |       | └─<+: +>
+              |   |     |   | |       └─<TERM: >
+              |   |     |   | |         └─<number: STARTDECLARATION
+              |   |     |   | |-<new_line: new_line>
+              |   |     |   | └─<SENTENCES: >
+              |   |     |   |   |-<SENTENCE: >
+              |   |     |   |   | └─<PRINT: >
+              |   |     |   |   |   |-<print: quack_it>
+              |   |     |   |   |   └─<id: quack_PRINT
+              |   |     |   |   |-<new_line: new_line>
+              |   |     |   |   └─<SENTENCES: >
+              |   |     |   |     |-<SENTENCE: >
+              |   |     |   |     | └─<PRINT: >
+              |   |     |   |     |   |-<print: quack_it>
+              |   |     |   |     |   └─<id: quack_START
+              |   |     |   |     └─<new_line: new_line>
+              |   |     |   └─<}: <(*)>
+              |   |     └─<new_line: new_line>
+              |   └─<}: <(*)>
+              └─<new_line: new_line>

@@ -1,0 +1,1 @@
+number_type id = number new_line number_type id = number new_line text id = string new_line text id = string new_line id = id + number new_line if ( id == id ) new_line { new_line print id new_line id = number new_line while ( id < number ) new_line { new_line id = id + number new_line print id new_line print id new_line } new_line } new_line

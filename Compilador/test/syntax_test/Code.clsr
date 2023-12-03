@@ -4,7 +4,7 @@ string_quack quack_2 = "Quack!"
 string_quack quack_3 = "Valor de quack_0:"
 
 quack_0 = quack_0 + 2
-quack_if ( quack_0 == quack_4 ) 
+quack_if ( quack_0 == quack_1 ) 
 (*)>
     quack_it quack_2
     quack_0 = -2
@@ -15,3 +15,5 @@ quack_if ( quack_0 == quack_4 )
         quack_it quack_0
     <(*)
 <(*)
+
+

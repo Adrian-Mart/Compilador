@@ -13,10 +13,12 @@ public static class Compiler
         TokenStream? tokens = lexer.GetOutputObject(code) as TokenStream;
         if (tokens == null)
             throw new Exception("Lexer output is null.");
+        WriteFileContent(lexer.GetOutputString(code), filePath, ".tkn");
         // Parse the code.
         (Tree, ParserSetup)? parserOutput = parser.GetOutputObject(tokens) as (Tree, ParserSetup)?;
         if (parserOutput == null)
             throw new Exception("Parser output is null.");
+        WriteFileContent(parser.GetOutputString(tokens), filePath, ".prs");
         TypeChecker typeChecker = new TypeChecker(parserOutput.Value.Item1, parserOutput.Value.Item2);
         if(!typeChecker.CheckTypes())
             throw new Exception("Type checking failed.");
@@ -31,9 +33,9 @@ public static class Compiler
         return generatedCode;
     }
 
-    private static void WriteFileContent(string input, string filePath)
+    private static void WriteFileContent(string input, string filePath, string extension = ".asm")
     {
-        using (StreamWriter writer = new StreamWriter(filePath + ".asm"))
+        using (StreamWriter writer = new StreamWriter(filePath + extension))
         {
             writer.Write(input);
         }
